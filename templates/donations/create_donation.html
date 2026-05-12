@@ -1,0 +1,293 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}{% if edit_mode %}Edit{% else %}Create{% endif %} Donation – AnnaDaan{% endblock %}
+{% block nav_create %}{% if not edit_mode %}active{% endif %}{% endblock %}
+{% block nav_my_donations %}{% if edit_mode %}active{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+.step-card{display:none}.step-card.active{display:block}
+.step-dot{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;transition:all .3s}
+.step-dot.done{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.step-dot.current{background:#fff;border:2px solid #10b981;color:#10b981}
+.step-dot.upcoming{background:#f1f5f9;color:#94a3b8}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        <a href="/donations/my-donations/" class="hover:text-green-600 transition-colors"><i class="fas fa-box-open mr-1"></i>My Donations</a>
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">{% if edit_mode %}Edit{% else %}New{% endif %} Donation</span>
+    </nav>
+
+    <div class="mb-6 animate-fadeInUp">
+        <h1 class="text-2xl font-bold text-gray-900">
+            {% if edit_mode %}Edit Donation{% else %}Create New Donation{% endif %}
+        </h1>
+        <p class="text-gray-500 text-sm mt-0.5">
+            {% if edit_mode %}Update your donation details below.{% else %}Fill in the details to list your surplus food.{% endif %}
+        </p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="flex items-center gap-0 mb-7 animate-fadeInUp delay-1">
+        <div class="flex flex-col items-center">
+            <div class="step-dot done" id="dot1"><i class="fas fa-check text-xs"></i></div>
+            <span class="text-xs text-gray-500 mt-1">Details</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-slate-200 mx-2" id="line1"></div>
+        <div class="flex flex-col items-center">
+            <div class="step-dot upcoming" id="dot2">2</div>
+            <span class="text-xs text-gray-400 mt-1" id="step2label">Location</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-slate-200 mx-2"></div>
+        <div class="flex flex-col items-center">
+            <div class="step-dot upcoming" id="dot3">3</div>
+            <span class="text-xs text-gray-400 mt-1">Review</span>
+        </div>
+    </div>
+
+    <form method="POST" id="donationForm" novalidate>
+        {% csrf_token %}
+        {% if edit_mode %}<input type="hidden" name="_method" value="PUT">{% endif %}
+
+        <!-- Step 1: Details -->
+        <div class="step-card active" id="step1">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4 animate-fadeInUp delay-2">
+                <h2 class="font-semibold text-gray-800 flex items-center gap-2">
+                    <span class="w-6 h-6 gradient-bg rounded flex items-center justify-center text-white text-xs">1</span>
+                    Donation Details
+                </h2>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Title <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <i class="fas fa-tag absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" name="title" id="title" required maxlength="200"
+                            value="{{ donation.title|default:'' }}"
+                            placeholder="e.g. Biryani – 30 servings, Rice & Dal"
+                            class="input-field">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Quantity (kg) <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i class="fas fa-weight-hanging absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                            <input type="number" name="quantity" id="quantity" required step="0.1" min="0.1" max="9999"
+                                value="{{ donation.quantity|default:'' }}"
+                                placeholder="e.g. 10.5"
+                                class="input-field">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Food Category</label>
+                        <div class="relative">
+                            <i class="fas fa-utensils absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                            <select name="food_type" class="input-field appearance-none">
+                                <option value="">Select category</option>
+                                {% for cat in food_categories %}
+                                <option value="{{ cat }}" {% if donation.food_type == cat %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Best Before <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <i class="fas fa-calendar-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="datetime-local" name="expiry_date" id="expiry_date" required
+                            value="{{ donation.expiry_date|date:'Y-m-d\TH:i'|default:'' }}"
+                            class="input-field">
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">When does this food need to be collected by?</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+                    <textarea name="description" rows="3" maxlength="1000"
+                        placeholder="Mention allergens, storage needs, number of servings, or any special notes..."
+                        class="input-bare resize-none">{{ donation.description|default:'' }}</textarea>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button type="button" onclick="goStep(2)" class="btn-primary text-sm">
+                        Next: Location <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Location -->
+        <div class="step-card" id="step2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4 animate-fadeInUp">
+                <h2 class="font-semibold text-gray-800 flex items-center gap-2">
+                    <span class="w-6 h-6 gradient-bg rounded flex items-center justify-center text-white text-xs">2</span>
+                    Pickup Location
+                </h2>
+                <p class="text-sm text-gray-500">Click on the map or drag the marker to set the pickup point.</p>
+
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" id="btnMyGPS" class="btn-primary text-xs py-2 px-3">
+                        <i class="fas fa-crosshairs mr-1"></i>Use GPS
+                    </button>
+                    <button type="button" id="btnRegistered" class="btn-ghost text-xs py-2 px-3">
+                        <i class="fas fa-home mr-1"></i>Registered Address
+                    </button>
+                </div>
+
+                <div id="donationMap" class="w-full rounded-xl border border-slate-200" style="height:300px;"></div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-500 font-medium">Latitude</label>
+                        <input type="text" id="lat_display" name="lat" readonly
+                            value="{{ donation.location_lat|default:default_lat }}"
+                            class="input-bare text-sm mt-1 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 font-medium">Longitude</label>
+                        <input type="text" id="lng_display" name="lng" readonly
+                            value="{{ donation.location_long|default:default_lng }}"
+                            class="input-bare text-sm mt-1 bg-slate-50">
+                    </div>
+                </div>
+                <input type="hidden" name="address" id="addressHidden" value="{{ donation.address|default:'' }}">
+
+                <div class="flex justify-between pt-2">
+                    <button type="button" onclick="goStep(1)" class="btn-ghost text-sm">
+                        <i class="fas fa-arrow-left mr-1"></i> Back
+                    </button>
+                    <button type="button" onclick="goStep(3)" class="btn-primary text-sm">
+                        Review <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Review & Submit -->
+        <div class="step-card" id="step3">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4 animate-fadeInUp">
+                <h2 class="font-semibold text-gray-800 flex items-center gap-2">
+                    <span class="w-6 h-6 gradient-bg rounded flex items-center justify-center text-white text-xs">3</span>
+                    Review & Submit
+                </h2>
+                <div id="reviewContent" class="space-y-3 text-sm text-gray-700"></div>
+
+                <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700">
+                    <i class="fas fa-shield-alt mr-2"></i>
+                    Your donation will be listed immediately and NGOs can request it once submitted.
+                </div>
+
+                <div class="flex justify-between pt-2">
+                    <button type="button" onclick="goStep(2)" class="btn-ghost text-sm">
+                        <i class="fas fa-arrow-left mr-1"></i> Back
+                    </button>
+                    <button type="submit" class="btn-primary text-sm px-8" id="submitBtn">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        {% if edit_mode %}Save Changes{% else %}Submit Donation{% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+const defaultLat = {{ default_lat|default:"20.5937" }};
+const defaultLng = {{ default_lng|default:"78.9629" }};
+let currentStep = 1;
+let map, marker;
+
+const dots = [null, document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+const cards = [null, document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
+
+function goStep(n) {
+    if (n === 2 && !validateStep1()) return;
+    currentStep = n;
+    cards.forEach((c, i) => { if (c) c.classList.toggle('active', i === n); });
+    dots.forEach((d, i) => {
+        if (!d) return;
+        if (i < n) { d.className='step-dot done'; d.innerHTML='<i class="fas fa-check text-xs"></i>'; }
+        else if (i === n) { d.className='step-dot current'; d.textContent=i; }
+        else { d.className='step-dot upcoming'; d.textContent=i; }
+    });
+    if (n === 2 && !map) initMap();
+    if (n === 3) buildReview();
+    window.scrollTo(0, 0);
+}
+
+function validateStep1() {
+    const title = document.getElementById('title').value.trim();
+    const qty = parseFloat(document.getElementById('quantity').value);
+    const expiry = document.getElementById('expiry_date').value;
+    if (!title) { alert('Please enter a title.'); return false; }
+    if (!qty || qty <= 0) { alert('Please enter a valid quantity.'); return false; }
+    if (!expiry) { alert('Please select an expiry date.'); return false; }
+    if (new Date(expiry) <= new Date()) { alert('Expiry date must be in the future.'); return false; }
+    return true;
+}
+
+function initMap() {
+    const lat = parseFloat(document.getElementById('lat_display').value) || defaultLat;
+    const lng = parseFloat(document.getElementById('lng_display').value) || defaultLng;
+    map = L.map('donationMap').setView([lat, lng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+    updateCoords(lat, lng);
+    map.on('click', e => { marker.setLatLng(e.latlng); updateCoords(e.latlng.lat, e.latlng.lng); });
+    marker.on('dragend', () => { const p = marker.getLatLng(); updateCoords(p.lat, p.lng); });
+    document.getElementById('btnMyGPS').addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => {
+                marker.setLatLng([p.coords.latitude, p.coords.longitude]);
+                map.setView([p.coords.latitude, p.coords.longitude], 15);
+                updateCoords(p.coords.latitude, p.coords.longitude);
+            }, () => alert('Location access denied.'));
+        }
+    });
+    document.getElementById('btnRegistered').addEventListener('click', () => {
+        marker.setLatLng([defaultLat, defaultLng]);
+        map.setView([defaultLat, defaultLng], 14);
+        updateCoords(defaultLat, defaultLng);
+    });
+}
+
+function updateCoords(lat, lng) {
+    document.getElementById('lat_display').value = lat.toFixed(6);
+    document.getElementById('lng_display').value = lng.toFixed(6);
+}
+
+function buildReview() {
+    const title = document.getElementById('title').value;
+    const qty = document.getElementById('quantity').value;
+    const expiry = document.getElementById('expiry_date').value;
+    const lat = document.getElementById('lat_display').value;
+    const lng = document.getElementById('lng_display').value;
+    document.getElementById('reviewContent').innerHTML = `
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 rounded-xl p-4">
+            <div><p class="text-xs text-gray-400">Title</p><p class="font-semibold mt-0.5">${title}</p></div>
+            <div><p class="text-xs text-gray-400">Quantity</p><p class="font-semibold mt-0.5">${qty} kg</p></div>
+            <div><p class="text-xs text-gray-400">Expires</p><p class="font-semibold mt-0.5">${expiry}</p></div>
+            <div><p class="text-xs text-gray-400">Location</p><p class="font-semibold mt-0.5">${lat}, ${lng}</p></div>
+        </div>
+    `;
+}
+
+// Set min expiry
+const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+document.getElementById('expiry_date').min = now.toISOString().slice(0, 16);
+
+// Submit loading state
+document.getElementById('donationForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
+});
+</script>
+{% endblock %}

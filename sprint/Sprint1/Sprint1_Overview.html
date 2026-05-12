@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint 1 Overview - AnnaDaan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        table {
+            width: 95%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            font-size: 11px;
+        }
+        th {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #1e40af;
+        }
+        td {
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        tr:hover {
+            background-color: #eff6ff;
+        }
+        .status-done {
+            color: #059669;
+            font-weight: bold;
+        }
+        .status-progress {
+            color: #d97706;
+            font-weight: bold;
+        }
+        .priority-high {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .section-title {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SPRINT 1 – Authentication & User Management</h1>
+        <p>Duration: 18/03/2026 – 31/03/2026 | Team: K. Mani Vignesh (PO), M. Manish Kumar Reddy (SM), D. Naga Gowtham Raj (Dev)</p>
+    </div>
+
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-value">23</div>
+            <div class="metric-label">Story Points</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">100%</div>
+            <div class="metric-label">Completion Rate</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">22</div>
+            <div class="metric-label">Tasks Completed</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">72</div>
+            <div class="metric-label">Hours Worked</div>
+        </div>
+    </div>
+
+    <div class="section-title">USER STORIES & TASKS</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">Story ID</th>
+                <th style="width: 200px;">User Stories</th>
+                <th style="width: 300px;">Participants (Story + Week + Date)</th>
+                <th style="width: 120px;">Assigned</th>
+                <th style="width: 100px;">Planned / Actual</th>
+                <th style="width: 80px;">Status</th>
+                <th style="width: 80px;">Points</th>
+                <th style="width: 100px;">Created</th>
+                <th style="width: 100px;">Completed</th>
+                <th style="width: 60px;">v1.0</th>
+                <th style="width: 80px;">Product Backlog</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Design registration form UI – 18/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td>8</td>
+                <td>18/03/2026</td>
+                <td>19/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Implement user model (Donor, Receiver, Admin) – 19/03/2026</td>
+                <td>Mani Vignesh</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>19/03/2026</td>
+                <td>20/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Add email verification system – 20/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>20/03/2026</td>
+                <td>21/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Create password validation logic – 21/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>21/03/2026</td>
+                <td>22/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Implement profile creation flow – 22/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>22/03/2026</td>
+                <td>23/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-01</td>
+                <td>User Registration</td>
+                <td>Write test case TC_S1_01 – 23/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>23/03/2026</td>
+                <td>24/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-02</td>
+                <td>User Login</td>
+                <td>Design login page UI – 24/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>24/03/2026</td>
+                <td>25/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-02</td>
+                <td>User Login</td>
+                <td>Implement Django authentication – 25/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>25/03/2026</td>
+                <td>26/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-02</td>
+                <td>User Login</td>
+                <td>Add session management – 26/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>26/03/2026</td>
+                <td>27/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-02</td>
+                <td>User Login</td>
+                <td>Create remember me functionality – 27/03/2026</td>
+                <td>Mani Vignesh</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>27/03/2026</td>
+                <td>28/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-02</td>
+                <td>User Login</td>
+                <td>Implement error handling – 28/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>28/03/2026</td>
+                <td>28/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-03</td>
+                <td>Profile Management</td>
+                <td>Design profile page UI – 25/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>25/03/2026</td>
+                <td>26/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-03</td>
+                <td>Profile Management</td>
+                <td>Implement profile view – 26/03/2026</td>
+                <td>Mani Vignesh</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>26/03/2026</td>
+                <td>27/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-03</td>
+                <td>Profile Management</td>
+                <td>Add profile edit functionality – 27/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>27/03/2026</td>
+                <td>28/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-03</td>
+                <td>Profile Management</td>
+                <td>Implement image upload – 28/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>28/03/2026</td>
+                <td>29/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-03</td>
+                <td>Profile Management</td>
+                <td>Create profile update logic – 29/03/2026</td>
+                <td>Mani Vignesh</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>29/03/2026</td>
+                <td>30/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Design password reset UI – 27/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>27/03/2026</td>
+                <td>28/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Implement forgot password flow – 28/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>28/03/2026</td>
+                <td>29/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Add email token generation – 29/03/2026</td>
+                <td>Mani Vignesh</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>29/03/2026</td>
+                <td>30/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Create password reset view – 30/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>30/03/2026</td>
+                <td>31/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Send password reset emails – 30/03/2026</td>
+                <td>Manish Kumar</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>30/03/2026</td>
+                <td>31/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+            <tr>
+                <td>US-04</td>
+                <td>Password Reset</td>
+                <td>Write password reset tests – 31/03/2026</td>
+                <td>Gowtham Raj</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>31/03/2026</td>
+                <td>31/03/2026</td>
+                <td>v1.0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">SPRINT REVIEW & RETROSPECTIVE</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Attendees</th>
+                <th>Key Outcomes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Sprint Review</strong></td>
+                <td>31/03/2026</td>
+                <td>Product Owner, Scrum Master, Development Team, Stakeholders</td>
+                <td>✅ All sprint deliverables completed successfully<br>✅ Authentication foundation ready for Sprint 2<br>✅ Stakeholder approval received</td>
+            </tr>
+            <tr>
+                <td><strong>Sprint Retrospective</strong></td>
+                <td>31/03/2026</td>
+                <td>Full Team</td>
+                <td>✅ Improve sprint planning with detailed estimation<br>✅ Implement peer code review process<br>✅ Increase team coordination meetings</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">DEPLOYMENT STATUS</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Environment</th>
+                <th>Status</th>
+                <th>Deployment Date</th>
+                <th>URL</th>
+                <th>Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Staging</td>
+                <td class="status-done">✅ Deployed</td>
+                <td>31/03/2026 17:00</td>
+                <td>staging.annadaan.local</td>
+                <td class="status-done">All Passed</td>
+            </tr>
+            <tr>
+                <td>Production</td>
+                <td class="status-progress">⏳ Pending</td>
+                <td>Waiting for Sprint 4</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,379 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AnnaDaan{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--primary:#10b981;--primary-dark:#059669;--sidebar-w:260px}
+        *{box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+        h1,h2,h3,h4{font-family:'Outfit',sans-serif}
+        .sidebar{width:var(--sidebar-w);transition:transform .3s ease}
+        .main-content{transition:margin .3s ease}
+        @media(max-width:1024px){.sidebar{position:fixed;top:0;left:0;height:100vh;z-index:50;transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main-content{margin-left:0}}
+        .nav-link{display:flex;align-items:center;gap:.75rem;padding:.6rem .9rem;border-radius:.75rem;font-size:.875rem;font-weight:500;color:#94a3b8;transition:all .2s;cursor:pointer;text-decoration:none}
+        .nav-link:hover{background:rgba(255,255,255,.07);color:#f1f5f9}
+        .nav-link.active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.35)}
+        .nav-link .icon{width:1.1rem;text-align:center;flex-shrink:0}
+        .badge{background:#ef4444;color:#fff;font-size:.65rem;font-weight:700;border-radius:999px;padding:.1rem .4rem;min-width:1.1rem;text-align:center}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}50%{box-shadow:0 0 0 10px rgba(16,185,129,.12)}}
+        .animate-fadeInUp{animation:fadeInUp .5s cubic-bezier(.22,1,.36,1) both}
+        .animate-slideIn{animation:slideIn .4s cubic-bezier(.22,1,.36,1) both}
+        .card-hover{transition:all .3s cubic-bezier(.4,0,.2,1)}
+        .card-hover:hover{transform:translateY(-3px);box-shadow:0 16px 40px -8px rgba(0,0,0,.1)}
+        .btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:600;padding:.65rem 1.5rem;border-radius:999px;transition:all .25s;box-shadow:0 4px 14px rgba(16,185,129,.3);position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.5rem}
+        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,185,129,.4)}
+        .btn-primary:active{transform:translateY(0)}
+        .btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:600;padding:.65rem 1.5rem;border-radius:999px;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem}
+        .btn-danger:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(239,68,68,.4)}
+        .btn-ghost{border:1.5px solid #e2e8f0;color:#64748b;font-weight:500;padding:.65rem 1.5rem;border-radius:999px;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem}
+        .btn-ghost:hover{background:#f8fafc;border-color:#10b981;color:#10b981}
+        .input-field{width:100%;padding:.7rem 1rem .7rem 2.5rem;border:1.5px solid #e2e8f0;border-radius:.75rem;font-size:.9rem;color:#0f172a;background:#f8fafc;transition:all .2s;outline:none}
+        .input-field:focus{border-color:#10b981;background:#fff;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+        .input-bare{width:100%;padding:.7rem 1rem;border:1.5px solid #e2e8f0;border-radius:.75rem;font-size:.9rem;color:#0f172a;background:#f8fafc;transition:all .2s;outline:none}
+        .input-bare:focus{border-color:#10b981;background:#fff;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+        .gradient-bg{background:linear-gradient(135deg,#10b981,#059669)}
+        .gradient-text{background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .glass{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.7)}
+        .section-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .85rem;background:rgba(16,185,129,.1);color:#059669;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:.02em}
+        /* Toast */
+        .toast-container{position:fixed;top:1.25rem;right:1.25rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;max-width:360px}
+        .toast{display:flex;align-items:center;gap:.65rem;padding:.9rem 1.1rem;border-radius:12px;font-weight:500;font-size:.875rem;animation:toastIn .35s cubic-bezier(.22,1,.36,1) both;box-shadow:0 8px 24px rgba(0,0,0,.12);cursor:pointer}
+        .toast.hide{animation:toastOut .25s ease forwards}
+        .toast-success{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+        .toast-error{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+        .toast-info{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+        .toast-warning{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+        /* Scrollbar */
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:#f1f5f9}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(#10b981,#059669);border-radius:999px}
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
+        .modal-box{background:#fff;border-radius:1.25rem;box-shadow:0 25px 60px rgba(0,0,0,.2);width:100%;max-width:480px;animation:fadeInUp .3s cubic-bezier(.22,1,.36,1)}
+        /* Status pills */
+        .pill-active{background:#dcfce7;color:#15803d}
+        .pill-requested{background:#fef9c3;color:#854d0e}
+        .pill-completed{background:#dbeafe;color:#1d4ed8}
+        .pill-expired{background:#f1f5f9;color:#64748b}
+        .pill-pending{background:#fef9c3;color:#854d0e}
+        .pill-accepted{background:#dcfce7;color:#15803d}
+        .pill-rejected{background:#fee2e2;color:#b91c1c}
+        .pill-scheduled{background:#dbeafe;color:#1d4ed8}
+        .pill-in_transit{background:#fef9c3;color:#854d0e}
+        .pill-delivered{background:#dcfce7;color:#15803d}
+        .pill-cancelled{background:#fee2e2;color:#b91c1c}
+        input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+        input[type=number]{-moz-appearance:textfield}
+        .delay-1{animation-delay:.05s}.delay-2{animation-delay:.1s}.delay-3{animation-delay:.15s}.delay-4{animation-delay:.2s}.delay-5{animation-delay:.25s}
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-slate-100 flex h-screen overflow-hidden">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar flex flex-col bg-slate-900 h-screen overflow-y-auto flex-shrink-0" id="sidebar">
+    <!-- Logo -->
+    <div class="p-5 border-b border-slate-800 flex items-center gap-3">
+        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-hand-holding-heart text-white"></i>
+        </div>
+        <div>
+            <p class="font-bold text-white text-sm leading-none">AnnaDaan</p>
+            <p class="text-xs text-slate-400 mt-0.5">
+                {% if layout_role == 'donor' %}Donor Portal{% else %}NGO Portal{% endif %}
+            </p>
+        </div>
+        <button class="ml-auto lg:hidden text-slate-400 hover:text-white" onclick="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- User Info -->
+    <div class="px-4 py-3 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-bold text-sm">{{ request.session.user_name|first|upper }}</span>
+            </div>
+            <div class="min-w-0">
+                <p class="text-white text-sm font-semibold truncate">{{ request.session.user_name }}</p>
+                <p class="text-slate-400 text-xs truncate">{{ request.session.user }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-3 space-y-0.5">
+        {% if layout_role == 'donor' %}
+        <a href="/dashboard/" class="nav-link {% block nav_dashboard %}{% endblock %}">
+            <i class="fas fa-home icon"></i> Dashboard
+        </a>
+        <a href="/donations/my-donations/" class="nav-link {% block nav_my_donations %}{% endblock %}">
+            <i class="fas fa-box-open icon"></i>
+            <span>My Donations</span>
+            {% if sidebar_active_count %}<span class="badge ml-auto">{{ sidebar_active_count }}</span>{% endif %}
+        </a>
+        <a href="/donations/create/" class="nav-link {% block nav_create %}{% endblock %}">
+            <i class="fas fa-plus-circle icon"></i> New Donation
+        </a>
+        <a href="/donations/manage-requests/" class="nav-link {% block nav_requests %}{% endblock %}">
+            <i class="fas fa-tasks icon"></i>
+            <span>Requests</span>
+            {% if sidebar_pending_count %}<span class="badge ml-auto">{{ sidebar_pending_count }}</span>{% endif %}
+        </a>
+        <a href="/donations/analytics/donor/" class="nav-link {% block nav_analytics %}{% endblock %}">
+            <i class="fas fa-chart-pie icon"></i> My Analytics
+        </a>
+        {% else %}
+        <a href="/dashboard/" class="nav-link {% block nav_dashboard_r %}{% endblock %}">
+            <i class="fas fa-home icon"></i> Dashboard
+        </a>
+        <a href="/donations/browse/" class="nav-link {% block nav_browse %}{% endblock %}">
+            <i class="fas fa-search icon"></i> Browse Donations
+        </a>
+        <a href="/donations/my-requests/" class="nav-link {% block nav_my_requests %}{% endblock %}">
+            <i class="fas fa-clipboard-list icon"></i>
+            <span>My Requests</span>
+            {% if sidebar_pending_count %}<span class="badge ml-auto">{{ sidebar_pending_count }}</span>{% endif %}
+        </a>
+        <a href="/donations/analytics/ngo/" class="nav-link {% block nav_analytics_r %}{% endblock %}">
+            <i class="fas fa-chart-line icon"></i> NGO Analytics
+        </a>
+        {% endif %}
+
+        <div class="pt-2 border-t border-slate-800 mt-2 space-y-0.5">
+            <a href="/notifications/" class="nav-link {% block nav_notifications %}{% endblock %}">
+                <i class="fas fa-bell icon"></i>
+                <span>Notifications</span>
+                {% if sidebar_unread_count %}<span class="badge ml-auto">{{ sidebar_unread_count }}</span>{% endif %}
+            </a>
+            <a href="/profile/" class="nav-link {% block nav_profile %}{% endblock %}">
+                <i class="fas fa-user-circle icon"></i> Profile
+            </a>
+        </div>
+    </nav>
+
+    <!-- Bottom: Logout -->
+    <div class="p-3 border-t border-slate-800">
+        <a href="/logout/" class="nav-link text-red-400 hover:bg-red-900/30 hover:text-red-300">
+            <i class="fas fa-sign-out-alt icon"></i> Logout
+        </a>
+    </div>
+</aside>
+
+<!-- Mobile backdrop -->
+<div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<!-- ===== MAIN ===== -->
+<div class="main-content flex-1 flex flex-col overflow-hidden" id="mainContent">
+    <!-- Top bar (mobile) -->
+    <header class="bg-white shadow-sm px-4 h-14 flex items-center justify-between lg:hidden flex-shrink-0">
+        <button onclick="openSidebar()" class="text-gray-600 hover:text-green-600">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+        <span class="font-bold text-gray-800">AnnaDaan</span>
+        <a href="/notifications/" class="relative text-gray-600">
+            <i class="fas fa-bell"></i>
+            {% if sidebar_unread_count %}<span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">{{ sidebar_unread_count }}</span>{% endif %}
+        </a>
+    </header>
+
+    <!-- Scrollable page content -->
+    <div class="flex-1 overflow-y-auto">
+        <!-- Toast messages -->
+        {% if messages %}
+        <div class="toast-container" id="toastContainer">
+            {% for msg in messages %}
+            <div class="toast toast-{% if msg.tags == 'error' %}error{% elif msg.tags == 'success' %}success{% elif msg.tags == 'warning' %}warning{% else %}info{% endif %}"
+                 onclick="this.classList.add('hide'); setTimeout(()=>this.remove(),250)">
+                <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-xs">
+                    {% if msg.tags == 'success' %}<i class="fas fa-check"></i>
+                    {% elif msg.tags == 'error' %}<i class="fas fa-times"></i>
+                    {% elif msg.tags == 'warning' %}<i class="fas fa-exclamation"></i>
+                    {% else %}<i class="fas fa-info"></i>{% endif %}
+                </div>
+                <span class="flex-1 leading-snug">{{ msg }}</span>
+                <i class="fas fa-times text-xs opacity-60 flex-shrink-0"></i>
+            </div>
+            {% endfor %}
+        </div>
+        <script>
+        setTimeout(()=>{
+            document.querySelectorAll('.toast-container .toast').forEach(t=>{
+                t.classList.add('hide');
+                setTimeout(()=>t.remove(),250);
+            });
+        }, 4500);
+        </script>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<script>
+function openSidebar(){
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebarBackdrop').classList.remove('hidden');
+}
+function closeSidebar(){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarBackdrop').classList.add('hidden');
+}
+</script>
+<!-- ===== FLOATING CHATBOT ===== -->
+<div id="chatbotPanel" class="fixed bottom-6 right-6 z-50">
+    <!-- Chat Window -->
+    <div id="chatbotWindow" class="hidden mb-3 w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden" style="max-height:520px;">
+        <!-- Header -->
+        <div class="gradient-bg p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-white">
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-sm">AnnaDaan AI</p>
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></div>
+                        <span class="text-xs opacity-80">Online</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-white/70 hover:text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="chatMessages" class="p-4 overflow-y-auto space-y-3" style="height:280px;">
+            <div class="flex gap-2">
+                <div class="w-6 h-6 gradient-bg rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fas fa-robot text-white text-xs"></i>
+                </div>
+                <div class="bg-slate-50 rounded-2xl rounded-tl-none p-3 text-sm text-gray-700 flex-1">
+                    👋 Hi! I'm the AnnaDaan AI Assistant.<br><br>
+                    Click <strong>"Explain AI Score"</strong> on any donation card or ask me anything!
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="border-t border-slate-100 p-3 flex gap-2">
+            <input id="chatInput" type="text" placeholder="Ask me anything..."
+                class="flex-1 text-sm border border-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100"
+                onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()"
+                class="gradient-bg text-white w-10 h-10 rounded-xl flex items-center justify-center hover:shadow-md transition-all flex-shrink-0">
+                <i class="fas fa-paper-plane text-sm"></i>
+            </button>
+        </div>
+
+        <!-- Quick prompts -->
+        <div class="px-3 pb-3 flex flex-wrap gap-1.5">
+            <button onclick="quickPrompt('What is priority score?')" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition-colors">What is priority score?</button>
+            <button onclick="quickPrompt('How are donations sorted?')" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition-colors">How are donations sorted?</button>
+            <button onclick="quickPrompt('How do I request a donation?')" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition-colors">How to request?</button>
+        </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button id="chatToggleBtn" onclick="toggleChat()"
+        class="w-14 h-14 gradient-bg rounded-full shadow-xl flex items-center justify-center text-white hover:scale-110 transition-transform relative">
+        <i class="fas fa-robot text-xl" id="chatIcon"></i>
+        <span id="chatBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center">!</span>
+    </button>
+</div>
+
+<script>
+let currentDonationId = null;
+let chatOpen = false;
+
+function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatbotWindow').classList.toggle('hidden', !chatOpen);
+    document.getElementById('chatIcon').className = chatOpen ? 'fas fa-times text-xl' : 'fas fa-robot text-xl';
+}
+
+function explainDonation(id, title) {
+    currentDonationId = id;
+    if (!chatOpen) toggleChat();
+    addBotMessage(`Analyzing <strong>"${title}"</strong>... 🔍`);
+    fetch('/donations/api/chatbot/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+        body: JSON.stringify({ donation_id: id, question: `Explain score for donation #${id}` })
+    }).then(r => r.json()).then(d => {
+        addBotMessage(formatMsg(d.reply));
+    }).catch(() => addBotMessage('Sorry, something went wrong. Please try again.'));
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    addUserMessage(msg);
+    input.value = '';
+    const typingId = addBotTyping();
+    fetch('/donations/api/chatbot/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+        body: JSON.stringify({ donation_id: currentDonationId, question: msg })
+    }).then(r => r.json()).then(d => {
+        removeTyping(typingId);
+        addBotMessage(formatMsg(d.reply));
+    }).catch(() => { removeTyping(typingId); addBotMessage('Sorry, I could not process that.'); });
+}
+
+function quickPrompt(text) {
+    const input = document.getElementById('chatInput');
+    input.value = text;
+    sendChatMessage();
+}
+
+function formatMsg(txt) {
+    return txt.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
+function addBotMessage(html) {
+    const box = document.getElementById('chatMessages');
+    box.innerHTML += `<div class="flex gap-2"><div class="w-6 h-6 gradient-bg rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-robot text-white text-xs"></i></div><div class="bg-slate-50 rounded-2xl rounded-tl-none p-3 text-sm text-gray-700 flex-1">${html}</div></div>`;
+    box.scrollTop = box.scrollHeight;
+}
+
+function addUserMessage(text) {
+    const box = document.getElementById('chatMessages');
+    box.innerHTML += `<div class="flex gap-2 justify-end"><div class="bg-green-500 text-white rounded-2xl rounded-tr-none p-3 text-sm max-w-xs">${text}</div></div>`;
+    box.scrollTop = box.scrollHeight;
+}
+
+function addBotTyping() {
+    const id = 'typing_' + Date.now();
+    const box = document.getElementById('chatMessages');
+    box.innerHTML += `<div id="${id}" class="flex gap-2"><div class="w-6 h-6 gradient-bg rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-robot text-white text-xs"></i></div><div class="bg-slate-50 rounded-2xl rounded-tl-none p-3 text-sm text-gray-400"><span class="animate-pulse">...</span></div></div>`;
+    box.scrollTop = box.scrollHeight;
+    return id;
+}
+
+function removeTyping(id) { document.getElementById(id)?.remove(); }
+
+function getCsrf() {
+    return document.cookie.split('; ').find(r => r.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+</script>
+
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

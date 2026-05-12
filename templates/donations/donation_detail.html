@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% block title %}{{ donation.title }} – AnnaDaan{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50">
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <a href="/dashboard/" class="flex items-center space-x-2">
+                <div class="w-9 h-9 gradient-bg rounded-full flex items-center justify-center">
+                    <i class="fas fa-hand-holding-heart text-white text-sm"></i>
+                </div>
+                <span class="font-bold text-lg text-gray-800">AnnaDaan</span>
+            </a>
+            <div class="flex items-center gap-3">
+                {% if role == 'receiver' %}
+                <a href="/donations/browse/" class="text-gray-600 hover:text-green-600 text-sm"><i class="fas fa-arrow-left mr-1"></i>Back to Browse</a>
+                {% elif role == 'donor' %}
+                <a href="/donations/my-donations/" class="text-gray-600 hover:text-green-600 text-sm"><i class="fas fa-arrow-left mr-1"></i>My Donations</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden animate-fadeInUp">
+            <!-- Header Band -->
+            <div class="{% if donation.status == 'active' %}gradient-bg{% elif donation.status == 'completed' %}bg-blue-600{% elif donation.status == 'expired' %}bg-gray-400{% else %}bg-yellow-500{% endif %} p-6 text-white">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                    <div>
+                        <span class="text-sm uppercase tracking-wider opacity-80">{{ donation.food_type|default:"Food Donation" }}</span>
+                        <h1 class="text-3xl font-bold mt-1">{{ donation.title }}</h1>
+                        <p class="opacity-90 mt-1 text-sm">By {{ donation.donor.name }} · {{ donation.created_at|date:"d M Y" }}</p>
+                    </div>
+                    {% if score %}
+                    <div class="bg-white/20 rounded-xl p-3 text-center min-w-20">
+                        <div class="text-3xl font-bold">{{ score }}</div>
+                        <div class="text-xs opacity-80">AI Score</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-6">
+                <!-- Status & Urgency -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold
+                        {% if donation.status == 'active' %}bg-green-100 text-green-700
+                        {% elif donation.status == 'completed' %}bg-blue-100 text-blue-700
+                        {% elif donation.status == 'expired' %}bg-gray-100 text-gray-600
+                        {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                        <i class="fas fa-circle text-xs mr-1"></i>{{ donation.status|capfirst }}
+                    </span>
+                    {% if hours_left < 3 %}
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-700">
+                        <i class="fas fa-fire mr-1"></i>Critical – {{ hours_left }}h left
+                    </span>
+                    {% elif hours_left < 12 %}
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-700">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>Urgent – {{ hours_left }}h left
+                    </span>
+                    {% else %}
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700">
+                        <i class="fas fa-clock mr-1"></i>{{ hours_left }}h remaining
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Quantity</p>
+                        <p class="font-bold text-xl text-gray-900">{{ donation.quantity }} kg</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Expires</p>
+                        <p class="font-bold text-gray-900">{{ donation.expiry_date|date:"d M Y, h:i A" }}</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Donor Contact</p>
+                        <p class="font-semibold text-gray-900">{{ donation.donor.contact }}</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Location</p>
+                        <p class="text-sm text-gray-700">{{ donation.address|default:"See map below" }}</p>
+                    </div>
+                </div>
+
+                {% if donation.description %}
+                <div class="mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Description</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed bg-slate-50 rounded-xl p-4">{{ donation.description }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Map -->
+                <div id="detailMap" class="w-full rounded-xl border border-slate-200 overflow-hidden mb-6" style="height:280px;"></div>
+
+                <!-- NGO Actions -->
+                {% if role == 'receiver' and donation.status == 'active' %}
+                <div class="border-t pt-5">
+                    {% if already_requested %}
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-700 text-center">
+                        <i class="fas fa-check-circle text-2xl mb-2"></i>
+                        <p class="font-semibold">You have already requested this donation.</p>
+                        <p class="text-sm mt-1">Status: <strong>{{ existing_request.status|capfirst }}</strong></p>
+                        <a href="/donations/my-requests/" class="inline-block mt-2 text-sm underline">View my requests →</a>
+                    </div>
+                    {% else %}
+                    <a href="/donations/{{ donation.donation_id }}/request/"
+                        class="btn-primary w-full text-center block text-lg py-4">
+                        <span><i class="fas fa-hand-paper mr-2"></i>Request This Donation</span>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Donor: Incoming Requests -->
+                {% if role == 'donor' and requests_list %}
+                <div class="border-t pt-5">
+                    <h3 class="font-bold text-gray-800 mb-3">Incoming Requests ({{ requests_list|length }})</h3>
+                    <div class="space-y-3">
+                        {% for req in requests_list %}
+                        <div class="border border-slate-200 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3">
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ req.receiver.name }}</p>
+                                <p class="text-sm text-gray-500">{{ req.receiver.city }} · {{ req.requested_at|date:"d M, h:i A" }}</p>
+                                {% if req.message %}<p class="text-sm text-gray-600 mt-1 italic">"{{ req.message }}"</p>{% endif %}
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                {% if req.status == 'pending' %}bg-yellow-100 text-yellow-700
+                                {% elif req.status == 'accepted' %}bg-green-100 text-green-700
+                                {% else %}bg-red-100 text-red-700{% endif %}">
+                                {{ req.status|capfirst }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="/donations/manage-requests/" class="inline-block mt-3 text-green-600 text-sm hover:underline">
+                        <i class="fas fa-tasks mr-1"></i>Manage all requests →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const map = L.map('detailMap', { zoomControl: true, attributionControl: false })
+    .setView([{{ donation.location_lat }}, {{ donation.location_long }}], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const greenIcon = L.divIcon({
+    className: '',
+    html: '<div style="background:linear-gradient(135deg,#10b981,#059669);width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 4px 12px rgba(16,185,129,.4)"></div>',
+    iconSize: [32, 32], iconAnchor: [16, 32]
+});
+L.marker([{{ donation.location_lat }}, {{ donation.location_long }}], { icon: greenIcon })
+    .addTo(map)
+    .bindPopup('<strong>{{ donation.title|escapejs }}</strong><br>{{ donation.quantity }} kg').openPopup();
+</script>
+{% endblock %}

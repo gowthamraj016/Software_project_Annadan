@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint 3 Overview - AnnaDaan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        th {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #1e40af;
+        }
+        td {
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        tr:hover {
+            background-color: #eff6ff;
+        }
+        .status-done {
+            color: #059669;
+            font-weight: bold;
+        }
+        .status-progress {
+            color: #d97706;
+            font-weight: bold;
+        }
+        .section-title {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SPRINT 3 – AI Priority & Pickup Management</h1>
+        <p>Duration: 15/04/2026 – 28/04/2026 | Team: K. Mani Vignesh (PO), M. Manish Kumar Reddy (SM), D. Naga Gowtham Raj (Dev)</p>
+    </div>
+
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-value">23</div>
+            <div class="metric-label">Story Points</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">100%</div>
+            <div class="metric-label">Completion Rate</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">21</div>
+            <div class="metric-label">Tasks Completed</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">72</div>
+            <div class="metric-label">Hours Worked</div>
+        </div>
+    </div>
+
+    <div class="section-title">USER STORIES & TASKS</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">Story ID</th>
+                <th style="width: 200px;">User Stories</th>
+                <th style="width: 250px;">Participants (Story + Week + Date)</th>
+                <th style="width: 100px;">Task Details</th>
+                <th style="width: 80px;">Assigned</th>
+                <th style="width: 100px;">Planned / Actual</th>
+                <th style="width: 80px;">Status</th>
+                <th style="width: 80px;">Points</th>
+                <th style="width: 100px;">Created</th>
+                <th style="width: 100px;">Completed</th>
+                <th style="width: 60px;">v1.0</th>
+                <th style="width: 80px;">Product Backlog</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Research AI prioritization algorithms – 15/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>8</td>
+                <td>15/04/2026</td>
+                <td>15/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Design priority scoring system – 16/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>16/04/2026</td>
+                <td>16/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Implement priority calculation logic – 16/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>16/04/2026</td>
+                <td>18/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Add priority field to DonationRequest – 16/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>16/04/2026</td>
+                <td>16/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Create auto-prioritization background task – 17/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>17/04/2026</td>
+                <td>18/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-09</td>
+                <td>AI Request Prioritization</td>
+                <td>Write test case TC_S3_01 – 18/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>18/04/2026</td>
+                <td>18/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-10</td>
+                <td>Track Pickup Status</td>
+                <td>Design pickup tracking UI – 18/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>18/04/2026</td>
+                <td>18/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-10</td>
+                <td>Track Pickup Status</td>
+                <td>Add status update functionality – 19/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>19/04/2026</td>
+                <td>19/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-10</td>
+                <td>Track Pickup Status</td>
+                <td>Implement real-time status notifications – 19/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>19/04/2026</td>
+                <td>19/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-10</td>
+                <td>Track Pickup Status</td>
+                <td>Create pickup timeline view – 20/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>20/04/2026</td>
+                <td>20/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-11</td>
+                <td>Update Pickup Completion</td>
+                <td>Design completion form UI – 21/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>21/04/2026</td>
+                <td>21/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-11</td>
+                <td>Update Pickup Completion</td>
+                <td>Add photo upload for proof – 21/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>21/04/2026</td>
+                <td>22/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-11</td>
+                <td>Update Pickup Completion</td>
+                <td>Implement completion validation – 21/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>21/04/2026</td>
+                <td>22/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-11</td>
+                <td>Update Pickup Completion</td>
+                <td>Update donation status on completion – 22/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>22/04/2026</td>
+                <td>22/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-11</td>
+                <td>Update Pickup Completion</td>
+                <td>Send completion notifications – 22/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>22/04/2026</td>
+                <td>22/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Design admin pickup dashboard – 23/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>23/04/2026</td>
+                <td>23/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Implement pickup filtering & search – 23/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>23/04/2026</td>
+                <td>23/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Add pickup statistics & analytics – 24/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>24/04/2026</td>
+                <td>24/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Create export functionality – 24/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>24/04/2026</td>
+                <td>24/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Implement map view for pickups – 25/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>25/04/2026</td>
+                <td>25/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-12</td>
+                <td>Admin Pickup Dashboard</td>
+                <td>Write admin dashboard tests – 25/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>25/04/2026</td>
+                <td>25/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">SPRINT REVIEW & RETROSPECTIVE</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Attendees</th>
+                <th>Key Outcomes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Sprint Review</strong></td>
+                <td>28/04/2026</td>
+                <td>Product Owner, Scrum Master, Development Team, Stakeholders</td>
+                <td>✅ All sprint deliverables completed successfully<br>✅ AI priority module achieved expected performance<br>✅ Admin dashboard exceeded expectations</td>
+            </tr>
+            <tr>
+                <td><strong>Sprint Retrospective</strong></td>
+                <td>28/04/2026</td>
+                <td>Full Team</td>
+                <td>✅ Improve sprint planning and task allocation<br>✅ Increase team coordination and communication<br>✅ Add comprehensive algorithm documentation</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">DEPLOYMENT STATUS</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Environment</th>
+                <th>Status</th>
+                <th>Deployment Date</th>
+                <th>URL</th>
+                <th>Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Staging</td>
+                <td class="status-done">✅ Deployed</td>
+                <td>28/04/2026 17:00</td>
+                <td>staging.annadaan.local</td>
+                <td class="status-done">All Passed</td>
+            </tr>
+            <tr>
+                <td>Production</td>
+                <td class="status-progress">⏳ Pending</td>
+                <td>Waiting for Sprint 4</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

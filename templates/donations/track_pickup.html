@@ -1,0 +1,303 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}Track Pickup #{{ pickup.pickup_id }} – AnnaDaan{% endblock %}
+{% block nav_requests %}{% if role == 'donor' %}active{% endif %}{% endblock %}
+{% block nav_my_requests %}{% if role == 'receiver' %}active{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+.timeline-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px }
+.timeline-line { width:2px;flex:1;min-height:20px;margin:2px 4px }
+.status-card { transition:all .3s }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        {% if role == 'donor' %}
+        <a href="/donations/manage-requests/" class="hover:text-green-600">Requests</a>
+        {% else %}
+        <a href="/donations/my-requests/" class="hover:text-green-600">My Requests</a>
+        {% endif %}
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">Pickup #{{ pickup.pickup_id }}</span>
+    </nav>
+
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6 animate-fadeInUp">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Live Pickup Tracking</h1>
+            <p class="text-gray-500 text-sm">{{ req.donation.title }} → {{ req.receiver.name }}</p>
+        </div>
+        <!-- Current Status Badge -->
+        <span class="px-4 py-2 rounded-xl text-sm font-bold pill-{{ pickup.status }}">
+            {% if pickup.status == 'scheduled' %}<i class="fas fa-calendar-check mr-2"></i>Scheduled
+            {% elif pickup.status == 'in_transit' %}<i class="fas fa-truck mr-2"></i>In Transit
+            {% elif pickup.status == 'delivered' %}<i class="fas fa-check-circle mr-2"></i>Delivered
+            {% else %}<i class="fas fa-times-circle mr-2"></i>Cancelled{% endif %}
+        </span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-5">
+        <!-- LEFT COLUMN -->
+        <div class="lg:col-span-1 space-y-4">
+
+            <!-- Pickup Details Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-1">
+                <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-truck text-green-500"></i> Pickup Details
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-calendar text-blue-500 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Scheduled Time</p>
+                            <p class="font-semibold text-gray-800">{{ pickup.scheduled_time|date:"d M Y, g:i A" }}</p>
+                        </div>
+                    </div>
+                    {% if pickup.driver_name %}
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-purple-500 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Driver</p>
+                            <p class="font-semibold text-gray-800">{{ pickup.driver_name }}</p>
+                            {% if pickup.driver_contact %}
+                            <a href="tel:{{ pickup.driver_contact }}" class="text-xs text-green-600 hover:underline">
+                                <i class="fas fa-phone mr-1"></i>{{ pickup.driver_contact }}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if pickup.actual_pickup_time %}
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Delivered At</p>
+                            <p class="font-semibold text-green-700">{{ pickup.actual_pickup_time|date:"d M Y, g:i A" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Parties Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-2">
+                <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-exchange-alt text-blue-500"></i> Route
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3 p-3 bg-orange-50 rounded-xl">
+                        <div class="w-9 h-9 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-home text-orange-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs text-gray-400">From (Donor)</p>
+                            <p class="font-semibold text-gray-800 text-sm truncate">{{ donor.name }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ donor.city }}, {{ donor.state }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center py-1">
+                        <div class="flex flex-col items-center gap-0.5">
+                            <div class="w-0.5 h-3 bg-slate-300 rounded"></div>
+                            <i class="fas fa-arrow-down text-xs text-slate-400"></i>
+                            <div class="w-0.5 h-3 bg-slate-300 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl">
+                        <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-building text-blue-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs text-gray-400">To (NGO)</p>
+                            <p class="font-semibold text-gray-800 text-sm truncate">{{ receiver.name }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ receiver.city }}, {{ receiver.state }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Status (receiver/admin only) -->
+            {% if role == 'receiver' or role == 'admin' %}
+            {% if pickup.status != 'delivered' and pickup.status != 'cancelled' %}
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-3">
+                <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-edit text-amber-500"></i> Update Status
+                </h3>
+                <form method="POST" action="/donations/pickup/{{ pickup.pickup_id }}/update/">
+                    {% csrf_token %}
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs text-gray-500 font-medium">New Status</label>
+                            <select name="status" class="input-bare text-sm mt-1">
+                                {% if pickup.status == 'scheduled' %}
+                                <option value="in_transit">🚚 In Transit (Picked Up)</option>
+                                {% endif %}
+                                {% if pickup.status in 'scheduled,in_transit' %}
+                                <option value="delivered">✅ Delivered Successfully</option>
+                                {% endif %}
+                                <option value="cancelled">❌ Cancel Pickup</option>
+                            </select>
+                        </div>
+                        <p class="text-xs text-gray-400">Optional: Share current location</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-xs text-gray-500">Latitude</label>
+                                <input type="number" name="lat" step="any" id="updateLat"
+                                    placeholder="Auto-fill" class="input-bare text-sm mt-1">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-500">Longitude</label>
+                                <input type="number" name="lng" step="any" id="updateLng"
+                                    placeholder="Auto-fill" class="input-bare text-sm mt-1">
+                            </div>
+                        </div>
+                        <button type="button" onclick="getGPS()" class="btn-ghost text-xs py-2 w-full justify-center">
+                            <i class="fas fa-crosshairs mr-1"></i>Use My Location
+                        </button>
+                        <button type="submit" class="btn-primary text-sm py-2.5 w-full justify-center">
+                            <i class="fas fa-save mr-2"></i>Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <!-- Tracking Timeline -->
+            {% if tracking_updates %}
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-4">
+                <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-history text-blue-500"></i> Timeline
+                </h3>
+                <div class="space-y-0">
+                    {% for update in tracking_updates %}
+                    <div class="flex gap-3">
+                        <div class="flex flex-col items-center">
+                            <div class="timeline-dot {% if forloop.last %}gradient-bg{% else %}bg-slate-300{% endif %}"></div>
+                            {% if not forloop.last %}<div class="timeline-line bg-slate-200"></div>{% endif %}
+                        </div>
+                        <div class="pb-4 flex-1">
+                            <p class="text-sm font-semibold text-gray-800 capitalize">{{ update.status }}</p>
+                            <p class="text-xs text-gray-400">{{ update.timestamp }}</p>
+                            <p class="text-xs text-gray-400">📍 {{ update.lat|floatformat:4 }}, {{ update.lng|floatformat:4 }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- RIGHT COLUMN: Map -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 animate-fadeInUp delay-1">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-map text-green-500"></i> Live Map
+                    </h3>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <div class="w-3 h-3 rounded-full bg-orange-500"></div> Donor
+                        <div class="w-3 h-3 rounded-full bg-blue-500 ml-2"></div> NGO
+                        {% if pickup.status == 'in_transit' %}<div class="w-3 h-3 rounded-full bg-green-500 animate-pulse ml-2"></div> Live{% endif %}
+                    </div>
+                </div>
+                <div id="trackMap" class="w-full rounded-xl overflow-hidden" style="height:420px;"></div>
+            </div>
+
+            <!-- Food Info Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-2">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="fas fa-utensils text-green-500"></i> Donation Details
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="text-center p-3 bg-slate-50 rounded-xl">
+                        <p class="text-xs text-gray-400">Food</p>
+                        <p class="font-bold text-gray-800 mt-1 truncate">{{ req.donation.title }}</p>
+                    </div>
+                    <div class="text-center p-3 bg-green-50 rounded-xl">
+                        <p class="text-xs text-gray-400">Quantity</p>
+                        <p class="font-bold text-green-700 mt-1">{{ req.donation.quantity }} kg</p>
+                    </div>
+                    <div class="text-center p-3 bg-blue-50 rounded-xl">
+                        <p class="text-xs text-gray-400">Type</p>
+                        <p class="font-bold text-blue-700 mt-1">{{ req.donation.food_type|default:"—" }}</p>
+                    </div>
+                    <div class="text-center p-3 bg-amber-50 rounded-xl">
+                        <p class="text-xs text-gray-400">Pickup #</p>
+                        <p class="font-bold text-amber-700 mt-1">#{{ pickup.pickup_id }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const DONOR_LAT = {{ donor.location_lat|default:"20.59" }};
+const DONOR_LNG = {{ donor.location_long|default:"78.96" }};
+const RECEIVER_LAT = {{ receiver.location_lat|default:"20.60" }};
+const RECEIVER_LNG = {{ receiver.location_long|default:"78.97" }};
+const UPDATES = {{ tracking_updates }};
+
+const centerLat = (DONOR_LAT + RECEIVER_LAT) / 2;
+const centerLng = (DONOR_LNG + RECEIVER_LNG) / 2;
+
+const map = L.map('trackMap').setView([centerLat, centerLng], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+
+// Donor marker
+const donorIcon = L.divIcon({ className:'', iconSize:[36,36], iconAnchor:[18,18],
+    html:'<div style="background:#f97316;width:36px;height:36px;border-radius:50%;border:3px solid white;box-shadow:0 4px 12px rgba(249,115,22,.4);display:flex;align-items:center;justify-content:center;color:white;font-size:15px">🏠</div>'
+});
+L.marker([DONOR_LAT, DONOR_LNG], {icon:donorIcon}).addTo(map)
+    .bindPopup('<strong>{{ donor.name|escapejs }}</strong><br>Donor Location');
+
+// Receiver marker
+const recvIcon = L.divIcon({ className:'', iconSize:[36,36], iconAnchor:[18,18],
+    html:'<div style="background:#3b82f6;width:36px;height:36px;border-radius:50%;border:3px solid white;box-shadow:0 4px 12px rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;color:white;font-size:15px">🏢</div>'
+});
+L.marker([RECEIVER_LAT, RECEIVER_LNG], {icon:recvIcon}).addTo(map)
+    .bindPopup('<strong>{{ receiver.name|escapejs }}</strong><br>NGO Location');
+
+// Dashed route line
+L.polyline([[DONOR_LAT, DONOR_LNG], [RECEIVER_LAT, RECEIVER_LNG]], {
+    color:'#10b981', weight:3, dashArray:'8,6', opacity:0.7
+}).addTo(map);
+
+// Live vehicle marker
+if (UPDATES.length > 0) {
+    const latest = UPDATES[UPDATES.length - 1];
+    const liveIcon = L.divIcon({ className:'', iconSize:[40,40], iconAnchor:[20,20],
+        html:'<div style="background:linear-gradient(135deg,#10b981,#059669);width:40px;height:40px;border-radius:50%;border:3px solid white;box-shadow:0 4px 20px rgba(16,185,129,.5);display:flex;align-items:center;justify-content:center;font-size:18px">🚚</div>'
+    });
+    L.marker([latest.lat, latest.lng], {icon:liveIcon}).addTo(map)
+        .bindPopup(`<strong>Current Location</strong><br>${latest.status}<br>${latest.timestamp}`)
+        .openPopup();
+    // Trail dots
+    UPDATES.forEach((u, i) => {
+        if (i < UPDATES.length - 1) {
+            L.circleMarker([u.lat, u.lng], {radius:4, color:'#10b981', fillColor:'#10b981', fillOpacity:0.6, weight:1}).addTo(map)
+                .bindPopup(u.status + '<br>' + u.timestamp);
+        }
+    });
+}
+
+map.fitBounds([[DONOR_LAT,DONOR_LNG],[RECEIVER_LAT,RECEIVER_LNG]], {padding:[50,50]});
+
+function getGPS() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(p => {
+            document.getElementById('updateLat').value = p.coords.latitude.toFixed(6);
+            document.getElementById('updateLng').value = p.coords.longitude.toFixed(6);
+        }, () => alert('Location access denied.'));
+    }
+}
+</script>
+{% endblock %}

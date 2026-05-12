@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Pickups – AnnaDaan Admin{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 min-h-screen bg-slate-900 text-white flex-shrink-0 hidden lg:flex flex-col">
+            <div class="p-5 border-b border-slate-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center"><i class="fas fa-hand-holding-heart text-white"></i></div>
+                    <div><p class="font-bold text-sm">AnnaDaan</p><p class="text-xs text-slate-400">Admin Panel</p></div>
+                </div>
+            </div>
+            <nav class="p-4 space-y-1 flex-1">
+                <a href="/panel/dashboard/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700 text-sm"><i class="fas fa-home w-4"></i> Dashboard</a>
+                <a href="/panel/users/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700 text-sm"><i class="fas fa-users w-4"></i> Users</a>
+                <a href="/panel/donations/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700 text-sm"><i class="fas fa-utensils w-4"></i> Donations</a>
+                <a href="/panel/pickups/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-600 text-white text-sm"><i class="fas fa-truck w-4"></i> Pickups</a>
+                <a href="/panel/analytics/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700 text-sm"><i class="fas fa-chart-bar w-4"></i> Analytics</a>
+                <a href="/panel/logs/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700 text-sm"><i class="fas fa-history w-4"></i> Logs</a>
+            </nav>
+            <div class="p-4 border-t border-slate-700">
+                <a href="/panel/logout/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 text-sm"><i class="fas fa-sign-out-alt w-4"></i> Logout</a>
+            </div>
+        </div>
+
+        <div class="flex-1 p-6">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">Pickup Management</h1>
+                <p class="text-gray-500 text-sm">{{ pickups|length }} total pickups</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-4 py-3 text-left">#</th>
+                            <th class="px-4 py-3 text-left">Donation</th>
+                            <th class="px-4 py-3 text-left">Donor → NGO</th>
+                            <th class="px-4 py-3 text-left">Driver</th>
+                            <th class="px-4 py-3 text-left">Scheduled</th>
+                            <th class="px-4 py-3 text-left">Status</th>
+                            <th class="px-4 py-3 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for p in pickups %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 text-gray-500">#{{ p.pickup_id }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-900 max-w-xs">
+                                {{ p.donation_request.donation.title|truncatechars:25 }}
+                                <p class="text-xs text-gray-400">{{ p.donation_request.donation.quantity }} kg</p>
+                            </td>
+                            <td class="px-4 py-3 text-xs text-gray-600">
+                                <p>{{ p.donation_request.donation.donor.name }}</p>
+                                <p class="text-gray-400">→ {{ p.donation_request.receiver.name }}</p>
+                            </td>
+                            <td class="px-4 py-3 text-xs text-gray-600">
+                                {% if p.driver_name %}
+                                <p>{{ p.driver_name }}</p>
+                                <p class="text-gray-400">{{ p.driver_contact }}</p>
+                                {% else %}—{% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-xs text-gray-500">{{ p.scheduled_time|date:"d M, H:i" }}</td>
+                            <td class="px-4 py-3">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                    {% if p.status == 'scheduled' %}bg-blue-100 text-blue-700
+                                    {% elif p.status == 'in_transit' %}bg-yellow-100 text-yellow-700
+                                    {% elif p.status == 'delivered' %}bg-green-100 text-green-700
+                                    {% else %}bg-red-100 text-red-700{% endif %}">
+                                    {{ p.status|capfirst }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-2">
+                                    <a href="/donations/pickup/{{ p.pickup_id }}/track/" class="text-xs text-blue-600 hover:underline">Track</a>
+                                    {% if p.status != 'delivered' and p.status != 'cancelled' %}
+                                    <a href="/panel/pickups/{{ p.pickup_id }}/deliver/"
+                                        onclick="return confirm('Mark as delivered?')"
+                                        class="text-xs text-green-600 hover:underline">Deliver</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">No pickups yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

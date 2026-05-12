@@ -1,0 +1,122 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}My Requests – AnnaDaan{% endblock %}
+{% block nav_my_requests %}active{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-5xl mx-auto">
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        <a href="/dashboard/" class="hover:text-green-600">Dashboard</a>
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">My Requests</span>
+    </nav>
+
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6 animate-fadeInUp">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">My Requests</h1>
+            <p class="text-gray-500 text-sm mt-0.5">Track all your donation requests and pickups</p>
+        </div>
+        <!-- Filter tabs -->
+        <div class="flex gap-1 bg-slate-100 rounded-xl p-1">
+            <a href="?status=" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if not status_filter %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">All</a>
+            <a href="?status=pending" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'pending' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Pending</a>
+            <a href="?status=accepted" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'accepted' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Accepted</a>
+            <a href="?status=rejected" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'rejected' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Rejected</a>
+        </div>
+    </div>
+
+    {% if my_requests %}
+    <div class="space-y-4">
+        {% for req in my_requests %}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden card-hover animate-fadeInUp delay-{{ forloop.counter }}">
+            <div class="h-0.5 {% if req.status == 'pending' %}bg-amber-400{% elif req.status == 'accepted' %}gradient-bg{% else %}bg-red-400{% endif %}"></div>
+            <div class="p-5">
+                <div class="flex flex-wrap gap-4 justify-between items-start">
+                    <div class="flex items-start gap-4 flex-1 min-w-0">
+                        <!-- Icon -->
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-utensils text-green-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <h3 class="font-bold text-gray-900">{{ req.donation.title }}</h3>
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold pill-{{ req.status }}">{{ req.status|capfirst }}</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-500">
+                                <span><i class="fas fa-user mr-1 text-blue-400"></i>{{ req.donation.donor.name }}</span>
+                                <span><i class="fas fa-weight-hanging mr-1 text-green-500"></i>{{ req.donation.quantity }} kg</span>
+                                <span><i class="fas fa-clock mr-1 text-amber-500"></i>Expires {{ req.donation.expiry_date|date:"d M Y, g:i A" }}</span>
+                            </div>
+
+                            {% if req.message %}
+                            <div class="mt-2 text-sm text-gray-600 italic bg-slate-50 rounded-lg p-2">
+                                <i class="fas fa-comment-dots mr-1 opacity-50"></i>"{{ req.message }}"
+                            </div>
+                            {% endif %}
+
+                            {% if req.status == 'accepted' %}
+                            {% if req.pickup %}
+                            <div class="mt-3 bg-green-50 border border-green-200 rounded-xl p-3 text-sm">
+                                <p class="font-semibold text-green-800 mb-1.5">
+                                    <i class="fas fa-truck mr-1"></i>Pickup Scheduled
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold ml-2 pill-{{ req.pickup.status }}">{{ req.pickup.status|capfirst }}</span>
+                                </p>
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-green-700">
+                                    <span><i class="fas fa-calendar mr-1"></i>{{ req.pickup.scheduled_time|date:"d M Y, g:i A" }}</span>
+                                    {% if req.pickup.driver_name %}<span><i class="fas fa-user mr-1"></i>{{ req.pickup.driver_name }}</span>{% endif %}
+                                    {% if req.pickup.driver_contact %}<span><i class="fas fa-phone mr-1"></i>{{ req.pickup.driver_contact }}</span>{% endif %}
+                                    {% if req.pickup.actual_pickup_time %}<span class="col-span-2 text-blue-700"><i class="fas fa-check mr-1"></i>Delivered {{ req.pickup.actual_pickup_time|date:"d M Y, g:i A" }}</span>{% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+
+                            {% if req.status == 'rejected' %}
+                            <div class="mt-2 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                This request was rejected. You can browse other available donations.
+                            </div>
+                            {% endif %}
+
+                            <p class="text-xs text-gray-400 mt-2">
+                                <i class="fas fa-clock mr-1"></i>Requested {{ req.requested_at|timesince }} ago
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Side actions -->
+                    <div class="flex flex-col gap-2">
+                        <a href="/donations/{{ req.donation.donation_id }}/"
+                            class="btn-ghost text-xs py-2 px-3 justify-center">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        {% if req.status == 'accepted' and req.pickup %}
+                        <a href="/donations/pickup/{{ req.pickup.pickup_id }}/track/"
+                            class="btn-primary text-xs py-2 px-3 justify-center">
+                            <i class="fas fa-map-marker-alt"></i> Track
+                        </a>
+                        {% elif req.status == 'rejected' %}
+                        <a href="/donations/browse/" class="btn-primary text-xs py-2 px-3 justify-center">
+                            <i class="fas fa-search"></i> Browse
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <div class="text-6xl mb-4">📋</div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">No requests{% if status_filter %} with this status{% endif %}</h3>
+        <p class="text-gray-400 mb-5">
+            {% if status_filter %}<a href="?status=" class="text-green-600 hover:underline">View all requests</a>
+            {% else %}Browse available donations and send your first request.{% endif %}
+        </p>
+        <a href="/donations/browse/" class="btn-primary text-sm py-2.5 px-8">
+            <i class="fas fa-search mr-2"></i>Browse Donations
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

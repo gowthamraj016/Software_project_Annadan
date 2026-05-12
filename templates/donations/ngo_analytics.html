@@ -1,0 +1,179 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}NGO Analytics – AnnaDaan{% endblock %}
+{% block nav_my_requests %}active{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        <a href="/dashboard/" class="hover:text-green-600">Dashboard</a>
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">NGO Analytics</span>
+    </nav>
+
+    <div class="mb-6 animate-fadeInUp">
+        <h1 class="text-2xl font-bold text-gray-900">NGO Analytics</h1>
+        <p class="text-gray-500 text-sm mt-0.5">Track your food collection impact</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 animate-fadeInUp delay-1">
+            <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-clipboard-list text-white text-sm"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.total_requests }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Total Requests</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 animate-fadeInUp delay-2">
+            <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-check text-white text-sm"></i>
+            </div>
+            <p class="text-2xl font-bold text-blue-600">{{ stats.accepted }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Accepted</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 animate-fadeInUp delay-3">
+            <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-leaf text-white text-sm"></i>
+            </div>
+            <p class="text-2xl font-bold text-amber-600">{{ stats.food_received_kg|floatformat:1 }} kg</p>
+            <p class="text-xs text-gray-400 mt-0.5">Food Received</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 animate-fadeInUp delay-4">
+            <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-truck text-white text-sm"></i>
+            </div>
+            <p class="text-2xl font-bold text-purple-600">{{ stats.active_pickups }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Active Pickups</p>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-5 mb-5">
+        <!-- Request Status Breakdown -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-2">
+            <h3 class="font-bold text-gray-800 mb-4">Request Status</h3>
+            <div class="flex items-center gap-6">
+                <div style="width:180px;height:180px;flex-shrink:0">
+                    <canvas id="reqStatusChart"></canvas>
+                </div>
+                <div class="space-y-2 flex-1">
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-amber-500"></div><span class="text-gray-600">Pending</span></div>
+                        <span class="font-bold text-gray-800">{{ stats.pending }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div><span class="text-gray-600">Accepted</span></div>
+                        <span class="font-bold text-gray-800">{{ stats.accepted }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-red-400"></div><span class="text-gray-600">Rejected</span></div>
+                        <span class="font-bold text-gray-800">{{ stats.rejected }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly food received -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fadeInUp delay-3">
+            <h3 class="font-bold text-gray-800 mb-4">Monthly Food Received (kg)</h3>
+            <div class="relative w-full" style="height: 250px;">
+                <canvas id="monthlyKgChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Pickups Table -->
+    {% if active_pickups %}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-5 animate-fadeInUp delay-4">
+        <div class="p-5 border-b border-slate-100">
+            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-truck text-green-500"></i> Active Pickups
+            </h3>
+        </div>
+        <div class="divide-y divide-slate-50">
+            {% for pickup in active_pickups %}
+            <div class="flex items-center justify-between px-5 py-4">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">{{ pickup.donation_request.donation.title }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">
+                        <i class="fas fa-calendar mr-1"></i>{{ pickup.scheduled_time|date:"d M Y, g:i A" }}
+                        {% if pickup.driver_name %}· Driver: {{ pickup.driver_name }}{% endif %}
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold pill-{{ pickup.status }}">{{ pickup.status|capfirst }}</span>
+                    <a href="/donations/pickup/{{ pickup.pickup_id }}/track/" class="btn-primary text-xs py-1.5 px-3">
+                        <i class="fas fa-map-marker-alt mr-1"></i>Track
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Requests -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 animate-fadeInUp delay-5">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-bold text-gray-800">Recent Requests</h3>
+            <a href="/donations/my-requests/" class="text-sm text-green-600 hover:underline">View All →</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Donation</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Donor</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Qty</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Status</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for req in recent_requests %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-5 py-3 font-medium text-gray-800 max-w-xs truncate">{{ req.donation.title }}</td>
+                        <td class="px-5 py-3 text-gray-600">{{ req.donation.donor.name }}</td>
+                        <td class="px-5 py-3 text-gray-600">{{ req.donation.quantity }} kg</td>
+                        <td class="px-5 py-3">
+                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold pill-{{ req.status }}">{{ req.status|capfirst }}</span>
+                        </td>
+                        <td class="px-5 py-3 text-gray-400 text-xs">{{ req.requested_at|date:"d M Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">No requests yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+new Chart(document.getElementById('reqStatusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Pending', 'Accepted', 'Rejected'],
+        datasets: [{ data: [{{ stats.pending }}, {{ stats.accepted }}, {{ stats.rejected }}],
+            backgroundColor: ['#f59e0b','#10b981','#ef4444'],
+            borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { cutout:'72%', plugins:{ legend:{ display:false } } }
+});
+
+new Chart(document.getElementById('monthlyKgChart'), {
+    type: 'bar',
+    data: {
+        labels: {{ monthly_labels|safe }},
+        datasets: [{ label:'Food (kg)', data: {{ monthly_kg|safe }},
+            backgroundColor: 'rgba(16,185,129,.2)', borderColor:'#10b981',
+            borderWidth:2, borderRadius:8 }]
+    },
+    options: { scales:{ y:{ beginAtZero:true, grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } },
+        plugins:{ legend:{ display:false } }, responsive:true, maintainAspectRatio:false }
+});
+</script>
+{% endblock %}

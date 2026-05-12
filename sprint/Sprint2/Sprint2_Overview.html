@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint 2 Overview - AnnaDaan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        th {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #1e40af;
+        }
+        td {
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        tr:hover {
+            background-color: #eff6ff;
+        }
+        .status-done {
+            color: #059669;
+            font-weight: bold;
+        }
+        .status-progress {
+            color: #d97706;
+            font-weight: bold;
+        }
+        .section-title {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SPRINT 2 – Donation Workflow</h1>
+        <p>Duration: 01/04/2026 – 14/04/2026 | Team: K. Mani Vignesh (PO), M. Manish Kumar Reddy (SM), D. Naga Gowtham Raj (Dev)</p>
+    </div>
+
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-value">23</div>
+            <div class="metric-label">Story Points</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">100%</div>
+            <div class="metric-label">Completion Rate</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">23</div>
+            <div class="metric-label">Tasks Completed</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">72</div>
+            <div class="metric-label">Hours Worked</div>
+        </div>
+    </div>
+
+    <div class="section-title">USER STORIES & TASKS</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">Story ID</th>
+                <th style="width: 200px;">User Stories</th>
+                <th style="width: 250px;">Participants (Story + Week + Date)</th>
+                <th style="width: 100px;">Task Details</th>
+                <th style="width: 80px;">Assigned</th>
+                <th style="width: 100px;">Planned / Actual</th>
+                <th style="width: 80px;">Status</th>
+                <th style="width: 80px;">Points</th>
+                <th style="width: 100px;">Created</th>
+                <th style="width: 100px;">Completed</th>
+                <th style="width: 60px;">v1.0</th>
+                <th style="width: 80px;">Product Backlog</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Design donation form UI – 01/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>8</td>
+                <td>01/04/2026</td>
+                <td>03/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Integrate Leaflet.js map for location – 02/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>02/04/2026</td>
+                <td>04/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Implement Nominatim geocoding API – 03/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>03/04/2026</td>
+                <td>04/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Create Donation model with all fields – 02/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>02/04/2026</td>
+                <td>02/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Implement form validation logic – 03/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>03/04/2026</td>
+                <td>04/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Write test case TC_S2_01 – 04/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>04/04/2026</td>
+                <td>04/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-05</td>
+                <td>Create Food Donation</td>
+                <td>Create donation creation view – 04/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>04/04/2026</td>
+                <td>04/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-06</td>
+                <td>View Donation Status</td>
+                <td>Design donations list UI – 05/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>05/04/2026</td>
+                <td>05/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-06</td>
+                <td>View Donation Status</td>
+                <td>Implement status filtering logic – 05/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>05/04/2026</td>
+                <td>05/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-06</td>
+                <td>View Donation Status</td>
+                <td>Add search functionality – 05/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>05/04/2026</td>
+                <td>05/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-06</td>
+                <td>View Donation Status</td>
+                <td>Calculate food saved statistics – 06/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>06/04/2026</td>
+                <td>06/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-06</td>
+                <td>View Donation Status</td>
+                <td>Create my_donations view – 05/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>05/04/2026</td>
+                <td>05/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-07</td>
+                <td>Request Food Donation</td>
+                <td>Design request form UI – 07/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>07/04/2026</td>
+                <td>07/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-07</td>
+                <td>Request Food Donation</td>
+                <td>Create DonationRequest model – 07/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>07/04/2026</td>
+                <td>07/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-07</td>
+                <td>Request Food Donation</td>
+                <td>Implement request creation logic – 08/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>08/04/2026</td>
+                <td>09/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-07</td>
+                <td>Request Food Donation</td>
+                <td>Add email notification system – 09/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>09/04/2026</td>
+                <td>09/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-07</td>
+                <td>Request Food Donation</td>
+                <td>Prevent duplicate requests – 08/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>08/04/2026</td>
+                <td>08/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Design request management UI – 10/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>5</td>
+                <td>10/04/2026</td>
+                <td>10/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Implement accept/reject logic – 10/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>10/04/2026</td>
+                <td>11/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Add pickup scheduling form – 11/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>11/04/2026</td>
+                <td>12/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Auto-reject other pending requests – 11/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>11/04/2026</td>
+                <td>11/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Send acceptance notifications – 12/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>12/04/2026</td>
+                <td>12/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-08</td>
+                <td>Accept Donation Request</td>
+                <td>Create Pickup model – 10/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>10/04/2026</td>
+                <td>10/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">SPRINT REVIEW & RETROSPECTIVE</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Attendees</th>
+                <th>Key Outcomes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Sprint Review</strong></td>
+                <td>14/04/2026</td>
+                <td>Product Owner, Scrum Master, Development Team, Stakeholders</td>
+                <td>✅ All sprint deliverables completed successfully<br>✅ Donation workflow foundation ready for Sprint 3<br>✅ Map integration exceeded expectations</td>
+            </tr>
+            <tr>
+                <td><strong>Sprint Retrospective</strong></td>
+                <td>14/04/2026</td>
+                <td>Full Team</td>
+                <td>✅ Increase team coordination and communication<br>✅ Optimize map loading performance<br>✅ Add comprehensive API documentation</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">DEPLOYMENT STATUS</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Environment</th>
+                <th>Status</th>
+                <th>Deployment Date</th>
+                <th>URL</th>
+                <th>Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Staging</td>
+                <td class="status-done">✅ Deployed</td>
+                <td>14/04/2026 17:00</td>
+                <td>staging.annadaan.local</td>
+                <td class="status-done">All Passed</td>
+            </tr>
+            <tr>
+                <td>Production</td>
+                <td class="status-progress">⏳ Pending</td>
+                <td>Waiting for Sprint 4</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

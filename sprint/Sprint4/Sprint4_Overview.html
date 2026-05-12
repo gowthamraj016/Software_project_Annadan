@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint 4 Overview - AnnaDaan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        th {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #1e40af;
+        }
+        td {
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        tr:hover {
+            background-color: #eff6ff;
+        }
+        .status-done {
+            color: #059669;
+            font-weight: bold;
+        }
+        .status-live {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .section-title {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .celebration {
+            background-color: #dcfce7;
+            border: 2px solid #16a34a;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .celebration h2 {
+            color: #16a34a;
+            margin: 0 0 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SPRINT 4 – Chatbot & Analytics (FINAL SPRINT)</h1>
+        <p>Duration: 29/04/2026 – 12/05/2026 | Team: K. Mani Vignesh (PO), M. Manish Kumar Reddy (SM), D. Naga Gowtham Raj (Dev)</p>
+    </div>
+
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-value">16</div>
+            <div class="metric-label">Story Points</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">100%</div>
+            <div class="metric-label">Completion Rate</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">20</div>
+            <div class="metric-label">Tasks Completed</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">60</div>
+            <div class="metric-label">Hours Worked</div>
+        </div>
+    </div>
+
+    <div class="section-title">USER STORIES & TASKS</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">Story ID</th>
+                <th style="width: 200px;">User Stories</th>
+                <th style="width: 250px;">Participants (Story + Week + Date)</th>
+                <th style="width: 100px;">Task Details</th>
+                <th style="width: 80px;">Assigned</th>
+                <th style="width: 100px;">Planned / Actual</th>
+                <th style="width: 80px;">Status</th>
+                <th style="width: 80px;">Points</th>
+                <th style="width: 100px;">Created</th>
+                <th style="width: 100px;">Completed</th>
+                <th style="width: 60px;">v1.0</th>
+                <th style="width: 80px;">Product Backlog</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Research chatbot frameworks – 29/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>4</td>
+                <td>29/04/2026</td>
+                <td>29/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Design chatbot conversation flow – 29/04/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>29/04/2026</td>
+                <td>29/04/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Implement chatbot backend API – 30/04/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>30/04/2026</td>
+                <td>01/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Create chatbot UI widget – 30/04/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>30/04/2026</td>
+                <td>01/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Add FAQ knowledge base – 01/05/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>01/05/2026</td>
+                <td>01/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Implement chat logging – 01/05/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>01/05/2026</td>
+                <td>01/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-13</td>
+                <td>Interactive Chatbot</td>
+                <td>Write test case TC_S4_01 – 01/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>01/05/2026</td>
+                <td>01/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-14</td>
+                <td>Donation Analytics</td>
+                <td>Design analytics dashboard UI – 02/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>4</td>
+                <td>02/05/2026</td>
+                <td>02/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-14</td>
+                <td>Donation Analytics</td>
+                <td>Implement donation statistics – 02/05/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>02/05/2026</td>
+                <td>02/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-14</td>
+                <td>Donation Analytics</td>
+                <td>Add Chart.js visualizations – 03/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>03/05/2026</td>
+                <td>03/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-14</td>
+                <td>Donation Analytics</td>
+                <td>Create impact metrics display – 03/05/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>03/05/2026</td>
+                <td>03/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-15</td>
+                <td>Admin System Analytics</td>
+                <td>Design admin analytics dashboard – 04/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>4</td>
+                <td>04/05/2026</td>
+                <td>04/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-15</td>
+                <td>Admin System Analytics</td>
+                <td>Implement user activity tracking – 04/05/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>04/05/2026</td>
+                <td>04/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-15</td>
+                <td>Admin System Analytics</td>
+                <td>Add system performance metrics – 05/05/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>05/05/2026</td>
+                <td>05/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-15</td>
+                <td>Admin System Analytics</td>
+                <td>Create trend analysis charts – 05/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>05/05/2026</td>
+                <td>05/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-16</td>
+                <td>Report Export</td>
+                <td>Design export functionality UI – 06/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td>4</td>
+                <td>06/05/2026</td>
+                <td>06/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-16</td>
+                <td>Report Export</td>
+                <td>Implement CSV export – 06/05/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>06/05/2026</td>
+                <td>06/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-16</td>
+                <td>Report Export</td>
+                <td>Implement PDF export – 07/05/2026</td>
+                <td>Viveeth</td>
+                <td>Manish Kumar</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>07/05/2026</td>
+                <td>07/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-16</td>
+                <td>Report Export</td>
+                <td>Add email report functionality – 07/05/2026</td>
+                <td>Viveeth</td>
+                <td>Mani Vignesh</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>07/05/2026</td>
+                <td>07/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>US-16</td>
+                <td>Report Export</td>
+                <td>Write export tests – 07/05/2026</td>
+                <td>Viveeth</td>
+                <td>Gowtham Raj</td>
+                <td>Planned</td>
+                <td class="status-done">Done</td>
+                <td></td>
+                <td>07/05/2026</td>
+                <td>07/05/2026</td>
+                <td>v1.0</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">SPRINT REVIEW & RETROSPECTIVE</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Attendees</th>
+                <th>Key Outcomes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Sprint Review</strong></td>
+                <td>12/05/2026</td>
+                <td>Product Owner, Scrum Master, Development Team, Stakeholders, Project Sponsors</td>
+                <td>✅ All sprint deliverables completed successfully<br>✅ Project ready for production deployment<br>✅ System meets all acceptance criteria<br>✅ Go-live approved for 12/05/2026</td>
+            </tr>
+            <tr>
+                <td><strong>Sprint Retrospective</strong></td>
+                <td>12/05/2026</td>
+                <td>Full Team</td>
+                <td>✅ Complete user manual documentation<br>✅ Implement automated deployment pipeline<br>✅ Conduct load testing on analytics<br>🎉 PROJECT SUCCESSFULLY COMPLETED!</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="celebration">
+        <h2>🎉 PROJECT SUCCESSFULLY COMPLETED! 🎉</h2>
+        <p><strong>AnnaDaan is now LIVE in PRODUCTION!</strong></p>
+        <p>Total: 85 Story Points | 4 Sprints | 100% Completion Rate</p>
+    </div>
+
+    <div class="section-title">DEPLOYMENT STATUS</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Environment</th>
+                <th>Status</th>
+                <th>Deployment Date</th>
+                <th>URL</th>
+                <th>Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Staging</td>
+                <td class="status-done">✅ Deployed</td>
+                <td>09/05/2026 17:00</td>
+                <td>staging.annadaan.local</td>
+                <td class="status-done">All Passed</td>
+            </tr>
+            <tr>
+                <td>Production</td>
+                <td class="status-live">🚀 LIVE</td>
+                <td>12/05/2026 17:00</td>
+                <td>annadaan.org</td>
+                <td class="status-done">All Passed</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">PROJECT SUMMARY</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sprint</th>
+                <th>Duration</th>
+                <th>Theme</th>
+                <th>Story Points</th>
+                <th>Completion</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Sprint 1</td>
+                <td>18/03/2026 - 31/03/2026</td>
+                <td>Authentication & User Management</td>
+                <td>23</td>
+                <td class="status-done">100%</td>
+                <td class="status-done">✅ Completed</td>
+            </tr>
+            <tr>
+                <td>Sprint 2</td>
+                <td>01/04/2026 - 14/04/2026</td>
+                <td>Donation Workflow</td>
+                <td>23</td>
+                <td class="status-done">100%</td>
+                <td class="status-done">✅ Completed</td>
+            </tr>
+            <tr>
+                <td>Sprint 3</td>
+                <td>15/04/2026 - 28/04/2026</td>
+                <td>AI Priority & Pickup Management</td>
+                <td>23</td>
+                <td class="status-done">100%</td>
+                <td class="status-done">✅ Completed</td>
+            </tr>
+            <tr>
+                <td>Sprint 4</td>
+                <td>29/04/2026 - 12/05/2026</td>
+                <td>Chatbot & Analytics</td>
+                <td>16</td>
+                <td class="status-done">100%</td>
+                <td class="status-done">✅ Completed</td>
+            </tr>
+            <tr style="background-color: #dcfce7; font-weight: bold;">
+                <td colspan="3"><strong>TOTAL PROJECT</strong></td>
+                <td><strong>85</strong></td>
+                <td class="status-done"><strong>100%</strong></td>
+                <td class="status-live"><strong>🚀 PRODUCTION LIVE</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

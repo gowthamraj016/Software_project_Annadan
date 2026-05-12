@@ -1,0 +1,177 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}Dashboard – AnnaDaan{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block nav_dashboard_r %}active{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+    <!-- Welcome Banner -->
+    <div class="gradient-bg rounded-2xl p-7 mb-6 text-white relative overflow-hidden animate-fadeInUp">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute -top-10 -right-10 w-64 h-64 bg-white rounded-full"></div>
+            <div class="absolute -bottom-16 -left-8 w-48 h-48 bg-white rounded-full"></div>
+        </div>
+        <div class="relative">
+            <div class="section-badge bg-white/20 text-white mb-3">
+                <i class="fas fa-{% if role == 'donor' %}hand-holding-heart{% else %}building{% endif %}"></i>
+                {% if role == 'donor' %}Donor{% else %}NGO{% endif %} Portal
+            </div>
+            <h1 class="text-3xl font-bold mb-1">Good {% now "G" as h %}{% if h|add:"0" < 12 %}Morning{% elif h|add:"0" < 17 %}Afternoon{% else %}Evening{% endif %}, {{ user_name }}! 👋</h1>
+            <p class="opacity-80 text-sm">{% now "l, F j, Y" %}</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {% if role == 'donor' %}
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-1">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-box-open text-green-600"></i>
+                </div>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ donations_count }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">My Donations</p>
+            <a href="/donations/my-donations/" class="text-xs text-green-600 hover:underline mt-2 block">View all →</a>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-2">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-bell text-amber-600"></i>
+                </div>
+                {% if pending_request_count %}<span class="badge">{{ pending_request_count }}</span>{% endif %}
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ pending_request_count|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Pending Requests</p>
+            <a href="/donations/manage-requests/?status=pending" class="text-xs text-amber-600 hover:underline mt-2 block">Review →</a>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-3">
+            <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-leaf text-blue-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ food_saved_kg|default:0 }} kg</p>
+            <p class="text-xs text-gray-400 mt-0.5">Food Saved</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-4">
+            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-star text-purple-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ active_donations|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Active Now</p>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-1">
+            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-search text-green-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ active_donations_count|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Available Donations</p>
+            <a href="/donations/browse/" class="text-xs text-green-600 hover:underline mt-2 block">Browse →</a>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-2">
+            <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-clipboard-list text-blue-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ requests_count|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">My Requests</p>
+            <a href="/donations/my-requests/" class="text-xs text-blue-600 hover:underline mt-2 block">View →</a>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-3">
+            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-check-circle text-purple-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ accepted_requests|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">Accepted</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm card-hover animate-fadeInUp delay-4">
+            <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-truck text-orange-600"></i>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ pickups_in_transit|default:0 }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">In Transit</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Actions + Info -->
+    <div class="grid md:grid-cols-2 gap-5 animate-fadeInUp delay-3">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-bolt text-amber-500"></i> Quick Actions
+            </h2>
+            <div class="grid grid-cols-2 gap-3">
+                {% if role == 'donor' %}
+                <a href="/donations/create/" class="flex flex-col items-center gap-2 p-4 gradient-bg text-white rounded-xl group hover:shadow-lg transition-all">
+                    <i class="fas fa-plus-circle text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">New Donation</span>
+                </a>
+                <a href="/donations/manage-requests/" class="flex flex-col items-center gap-2 p-4 bg-amber-50 text-amber-700 rounded-xl group hover:bg-amber-100 transition-all">
+                    <i class="fas fa-tasks text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">Requests</span>
+                </a>
+                <a href="/donations/my-donations/" class="flex flex-col items-center gap-2 p-4 bg-slate-50 text-slate-700 rounded-xl group hover:bg-slate-100 transition-all">
+                    <i class="fas fa-box-open text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">My Donations</span>
+                </a>
+                <a href="/profile/" class="flex flex-col items-center gap-2 p-4 bg-purple-50 text-purple-700 rounded-xl group hover:bg-purple-100 transition-all">
+                    <i class="fas fa-user-edit text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">Profile</span>
+                </a>
+                {% else %}
+                <a href="/donations/browse/" class="flex flex-col items-center gap-2 p-4 gradient-bg text-white rounded-xl group hover:shadow-lg transition-all">
+                    <i class="fas fa-search text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">Browse Food</span>
+                </a>
+                <a href="/donations/my-requests/" class="flex flex-col items-center gap-2 p-4 bg-blue-50 text-blue-700 rounded-xl group hover:bg-blue-100 transition-all">
+                    <i class="fas fa-clipboard-list text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">My Requests</span>
+                </a>
+                <a href="/profile/" class="flex flex-col items-center gap-2 p-4 bg-purple-50 text-purple-700 rounded-xl group hover:bg-purple-100 transition-all">
+                    <i class="fas fa-user-edit text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">Profile</span>
+                </a>
+                <a href="/donations/browse/" class="flex flex-col items-center gap-2 p-4 bg-green-50 text-green-700 rounded-xl group hover:bg-green-100 transition-all">
+                    <i class="fas fa-robot text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold">AI Priority</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-sparkles text-green-500"></i> Platform Features
+            </h2>
+            <div class="space-y-3">
+                <div class="flex items-start gap-3 p-3 bg-green-50 rounded-xl">
+                    <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">AI Priority Scoring</p>
+                        <p class="text-xs text-gray-500">Urgency · Quantity · Distance — scored 0–100</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-map-marker-alt text-white text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Real-time Tracking</p>
+                        <p class="text-xs text-gray-500">Track pickups live on an interactive map</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-xl">
+                    <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-bell text-white text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Smart Notifications</p>
+                        <p class="text-xs text-gray-500">Email + in-app alerts for all key events</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}Manage Requests – AnnaDaan{% endblock %}
+{% block nav_requests %}active{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-5xl mx-auto">
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        <a href="/donations/my-donations/" class="hover:text-green-600"><i class="fas fa-box-open mr-1"></i>My Donations</a>
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">Manage Requests</span>
+    </nav>
+
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6 animate-fadeInUp">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Incoming Requests</h1>
+            <p class="text-gray-500 text-sm mt-0.5">Review and act on NGO donation requests</p>
+        </div>
+        <!-- Status filter tabs -->
+        <div class="flex gap-1 bg-slate-100 rounded-xl p-1">
+            <a href="?status=" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if not status_filter %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">All ({{ all_count }})</a>
+            <a href="?status=pending" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'pending' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Pending ({{ pending_count }})</a>
+            <a href="?status=accepted" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'accepted' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Accepted</a>
+            <a href="?status=rejected" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if status_filter == 'rejected' %}bg-white shadow text-gray-900{% else %}text-gray-500 hover:text-gray-700{% endif %}">Rejected</a>
+        </div>
+    </div>
+
+    {% if pending_requests %}
+    <div class="space-y-4">
+        {% for req in pending_requests %}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden card-hover animate-fadeInUp delay-{{ forloop.counter }}">
+            <!-- Top color indicator -->
+            <div class="h-0.5 {% if req.status == 'pending' %}bg-amber-400{% elif req.status == 'accepted' %}gradient-bg{% else %}bg-red-400{% endif %}"></div>
+            <div class="p-5">
+                <div class="flex flex-wrap gap-4 justify-between items-start">
+                    <!-- NGO Info -->
+                    <div class="flex items-start gap-4 flex-1 min-w-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-building text-green-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-bold text-gray-900">{{ req.receiver.name }}</h3>
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold pill-{{ req.status }}">{{ req.status|capfirst }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">{{ req.receiver.city }}, {{ req.receiver.state }}</p>
+                            {% if req.receiver.ngo_registration_no %}
+                            <p class="text-xs text-gray-400">Reg: {{ req.receiver.ngo_registration_no }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-400 mt-0.5">Capacity: {{ req.receiver.capacity }} kg/day</p>
+
+                            <!-- Donation this request is for -->
+                            <div class="mt-3 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                                <p class="text-xs text-gray-400 font-medium mb-1">REQUESTING:</p>
+                                <p class="font-semibold text-gray-800 text-sm">{{ req.donation.title }}</p>
+                                <div class="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
+                                    <span><i class="fas fa-weight-hanging mr-1 text-green-500"></i>{{ req.donation.quantity }} kg</span>
+                                    <span><i class="fas fa-clock mr-1 text-amber-500"></i>Expires {{ req.donation.expiry_date|date:"d M Y, g:i A" }}</span>
+                                </div>
+                            </div>
+
+                            {% if req.message %}
+                            <div class="mt-2 bg-blue-50 rounded-lg p-2.5 border-l-3 border-blue-400 text-sm text-blue-800 italic">
+                                <i class="fas fa-comment-dots mr-1 opacity-60"></i>"{{ req.message }}"
+                            </div>
+                            {% endif %}
+
+                            <p class="text-xs text-gray-400 mt-2">
+                                <i class="fas fa-clock mr-1"></i>Requested {{ req.requested_at|timesince }} ago
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col gap-2 min-w-[140px]">
+                        {% if req.status == 'pending' %}
+                        <button onclick="showAcceptModal({{ req.request_id }}, '{{ req.receiver.name|escapejs }}')"
+                            class="btn-primary text-sm py-2.5 justify-center">
+                            <i class="fas fa-check"></i> Accept & Schedule
+                        </button>
+                        <button onclick="confirmReject({{ req.request_id }}, '{{ req.receiver.name|escapejs }}')"
+                            class="btn-danger text-sm py-2.5 justify-center">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        {% elif req.status == 'accepted' %}
+                        <span class="inline-flex items-center gap-1 text-green-600 text-sm font-medium">
+                            <i class="fas fa-check-circle"></i> Accepted
+                        </span>
+                        {% if req.pickup %}
+                        <a href="/donations/pickup/{{ req.pickup.pickup_id }}/track/"
+                            class="btn-ghost text-sm py-2.5 justify-center">
+                            <i class="fas fa-map-marker-alt"></i> Track
+                        </a>
+                        {% endif %}
+                        {% else %}
+                        <span class="inline-flex items-center gap-1 text-red-500 text-sm font-medium">
+                            <i class="fas fa-times-circle"></i> Rejected
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <div class="text-6xl mb-4">📭</div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">No requests {% if status_filter %}with status "{{ status_filter }}"{% else %}yet{% endif %}</h3>
+        <p class="text-gray-400 mb-5">
+            {% if status_filter %}<a href="?status=" class="text-green-600 hover:underline">View all requests</a>
+            {% else %}When NGOs request your donations, they'll appear here.{% endif %}
+        </p>
+        <a href="/donations/create/" class="btn-primary text-sm py-2.5 px-8">
+            <i class="fas fa-plus mr-2"></i>Add Donation
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Accept & Schedule Modal -->
+<div id="acceptModal" class="modal-overlay hidden">
+    <div class="modal-box p-6">
+        <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-calendar-check text-green-600"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900">Accept & Schedule Pickup</h3>
+                <p class="text-sm text-gray-500" id="acceptModalNGO">for <span id="acceptNGOName"></span></p>
+            </div>
+        </div>
+        <form method="POST" id="acceptForm" action="">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Pickup Date & Time <span class="text-red-500">*</span></label>
+                    <input type="datetime-local" name="scheduled_time" required class="input-bare">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Driver Name</label>
+                        <input type="text" name="driver_name" placeholder="e.g. Ravi Kumar" maxlength="100" class="input-bare">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Driver Contact</label>
+                        <input type="text" name="driver_contact" placeholder="+91 9876543210" maxlength="15" class="input-bare">
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="hideModal('acceptModal')" class="flex-1 btn-ghost py-3 justify-center">Cancel</button>
+                    <button type="submit" class="flex-1 btn-primary py-3 justify-center">
+                        <i class="fas fa-check mr-2"></i>Confirm
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reject Confirmation Modal -->
+<div id="rejectModal" class="modal-overlay hidden">
+    <div class="modal-box p-6">
+        <div class="text-center mb-5">
+            <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-times text-red-500 text-xl"></i>
+            </div>
+            <h3 class="font-bold text-gray-900 text-lg">Reject Request?</h3>
+            <p class="text-gray-500 text-sm mt-2">Reject request from <strong id="rejectNGOName"></strong>?<br>The NGO will be notified.</p>
+        </div>
+        <form method="POST" id="rejectForm" action="">
+            {% csrf_token %}
+            <div class="flex gap-3">
+                <button type="button" onclick="hideModal('rejectModal')" class="flex-1 btn-ghost py-3 justify-center">Cancel</button>
+                <button type="submit" class="flex-1 btn-danger py-3 justify-center">
+                    <i class="fas fa-times mr-2"></i>Reject
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showAcceptModal(id, name) {
+    document.getElementById('acceptForm').action = `/donations/request/${id}/accept/`;
+    document.getElementById('acceptNGOName').textContent = name;
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset() + 30);
+    document.querySelector('[name="scheduled_time"]').min = now.toISOString().slice(0, 16);
+    document.getElementById('acceptModal').classList.remove('hidden');
+}
+function confirmReject(id, name) {
+    document.getElementById('rejectForm').action = `/donations/request/${id}/reject/`;
+    document.getElementById('rejectNGOName').textContent = name;
+    document.getElementById('rejectModal').classList.remove('hidden');
+}
+function hideModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+['acceptModal','rejectModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+        if (e.target === this) hideModal(id);
+    });
+});
+</script>
+{% endblock %}

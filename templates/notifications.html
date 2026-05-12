@@ -1,0 +1,77 @@
+{% extends 'layouts/donor_layout.html' %}
+{% block title %}Notifications – AnnaDaan{% endblock %}
+{% block nav_profile %}{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-5">
+        <a href="/dashboard/" class="hover:text-green-600">Dashboard</a>
+        <i class="fas fa-chevron-right text-xs"></i>
+        <span class="text-gray-700 font-medium">Notifications</span>
+    </nav>
+
+    <div class="flex items-center justify-between mb-6 animate-fadeInUp">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
+            <p class="text-gray-500 text-sm mt-0.5">All alerts and updates for your account</p>
+        </div>
+        {% if notifications %}
+        <form method="POST" action="/notifications/mark-all-read/">
+            {% csrf_token %}
+            <button type="submit" class="btn-ghost text-sm py-2 px-4">
+                <i class="fas fa-check-double mr-1"></i> Mark All Read
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if notifications %}
+    <div class="space-y-3">
+        {% for notif in notifications %}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-start gap-4 animate-fadeInUp card-hover
+            {% if not notif.is_read %}border-l-4 border-l-green-400{% endif %}">
+            <!-- Icon -->
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+                {% if not notif.is_read %}gradient-bg{% else %}bg-slate-100{% endif %}">
+                {% if 'accepted' in notif.message or 'delivered' in notif.message %}
+                <i class="fas fa-check {% if not notif.is_read %}text-white{% else %}text-green-500{% endif %} text-sm"></i>
+                {% elif 'rejected' in notif.message or 'rejected' in notif.message %}
+                <i class="fas fa-times {% if not notif.is_read %}text-white{% else %}text-red-500{% endif %} text-sm"></i>
+                {% elif 'requested' in notif.message %}
+                <i class="fas fa-inbox {% if not notif.is_read %}text-white{% else %}text-blue-500{% endif %} text-sm"></i>
+                {% else %}
+                <i class="fas fa-bell {% if not notif.is_read %}text-white{% else %}text-amber-500{% endif %} text-sm"></i>
+                {% endif %}
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-gray-800 {% if not notif.is_read %}font-semibold{% endif %}">
+                    {{ notif.message }}
+                </p>
+                <p class="text-xs text-gray-400 mt-1">
+                    <i class="fas fa-clock mr-1"></i>{{ notif.created_at|timesince }} ago
+                </p>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0">
+                {% if not notif.is_read %}
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                {% endif %}
+                {% if notif.link %}
+                <a href="{{ notif.link }}" class="text-green-600 hover:text-green-800 text-xs font-medium">
+                    View <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <div class="text-6xl mb-4">🔔</div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">No notifications yet</h3>
+        <p class="text-gray-400">You'll be notified about requests, acceptances, pickups, and more.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

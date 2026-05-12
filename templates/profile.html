@@ -1,0 +1,381 @@
+<!-- templates/profile.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                            <i class="fas fa-hand-holding-heart text-white"></i>
+                        </div>
+                        <span class="font-bold text-xl text-gray-800">AnnaDaan</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard/" class="text-gray-600 hover:text-green-600 transition-colors">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="/profile/" class="text-green-600 font-semibold">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="/logout/" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Profile Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden sticky top-24">
+                    <div class="gradient-bg p-6 text-center text-white">
+                        <div class="w-24 h-24 rounded-full bg-white/20 mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-user-circle text-5xl"></i>
+                        </div>
+                        <h2 class="text-xl font-bold">{{ user.name }}</h2>
+                        <p class="opacity-90">{{ user.email }}</p>
+                        <p class="text-sm mt-2">
+                            {% if role == 'donor' %}
+                            <i class="fas fa-hand-holding-heart mr-1"></i>
+                            {% else %}
+                            <i class="fas fa-building mr-1"></i>
+                            {% endif %}
+                            {{ role|title }}
+                        </p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-phone w-5 text-green-500"></i>
+                                <span>{{ user.contact }}</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-calendar-alt w-5 text-green-500"></i>
+                                <span>Joined: {{ user.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            {% if role == 'receiver' %}
+                            <div class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-boxes w-5 text-green-500"></i>
+                                <span>Capacity: {{ user.capacity }} kg/day</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-id-card w-5 text-green-500"></i>
+                                <span>Reg No: {{ user.ngo_registration_no|default:"Not provided" }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-check-circle w-5 text-green-500"></i>
+                                <span>Verified: {% if user.is_verified %}Yes{% else %}No{% endif %}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Edit Profile Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-edit text-green-500 mr-2"></i>Edit Profile
+                    </h2>
+                    
+                    <form method="POST" id="profileForm">
+                        {% csrf_token %}
+                        
+                        <!-- Personal Information -->
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                            <h3 class="font-semibold text-gray-700 mb-3">Personal Information</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                    <input type="text" name="name" value="{{ user.name }}" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+                                    <input type="text" name="contact" value="{{ user.contact }}" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" value="{{ user.email }}" disabled
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                            </div>
+                        </div>
+                        
+                        <!-- Address Information -->
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                            <h3 class="font-semibold text-gray-700 mb-3">Address Information</h3>
+                            
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+                                <input type="text" name="address_line1" value="{{ user.address_line1 }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4 mb-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                    <input type="text" name="city" value="{{ user.city }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
+                                    <input type="text" name="state" value="{{ user.state }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pincode</label>
+                                    <input type="text" name="pincode" value="{{ user.pincode }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                                    <input type="text" value="India" disabled
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- NGO Specific Fields -->
+                        {% if role == 'receiver' %}
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                            <h3 class="font-semibold text-gray-700 mb-3">NGO Information</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Capacity (kg/day)</label>
+                                    <input type="number" name="capacity" value="{{ user.capacity }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Registration Number</label>
+                                    <input type="text" name="ngo_registration_no" value="{{ user.ngo_registration_no }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Map Section -->
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                            <h3 class="font-semibold text-gray-700 mb-3">Location on Map</h3>
+                            
+                            <div class="flex gap-3 mb-3">
+                                <button type="button" id="getCurrentLocationBtn" 
+                                    class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all">
+                                    <i class="fas fa-location-dot mr-2"></i>Use Current Location
+                                </button>
+                                <button type="button" id="updateFromAddressBtn" 
+                                    class="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all">
+                                    <i class="fas fa-sync-alt mr-2"></i>Update from Address
+                                </button>
+                            </div>
+                            
+                            <div id="map" class="h-80 rounded-lg mb-2"></div>
+                            <p class="text-xs text-gray-500 text-center">📍 Click on the map to update your location</p>
+                            <input type="hidden" name="lat" id="lat" value="{{ user.location_lat }}">
+                            <input type="hidden" name="lng" id="lng" value="{{ user.location_long }}">
+                        </div>
+                        
+                        <button type="submit" 
+                            class="gradient-bg text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all">
+                            <i class="fas fa-save mr-2"></i>Save Changes
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Change Password Section -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-key text-green-500 mr-2"></i>Change Password
+                    </h2>
+                    
+                    <form method="POST" action="/change-password/">
+                        {% csrf_token %}
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                <input type="password" name="current_password" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                <input type="password" name="new_password" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                <input type="password" name="confirm_password" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            </div>
+                            
+                            <button type="submit" 
+                                class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all">
+                                <i class="fas fa-lock mr-2"></i>Update Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let map;
+    let marker;
+    
+    function initMap(lat, lng) {
+        if (map) {
+            map.remove();
+        }
+        
+        map = L.map('map').setView([lat, lng], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        marker = L.marker([lat, lng]).addTo(map);
+        
+        map.on('click', async function(e) {
+            const newLat = e.latlng.lat;
+            const newLng = e.latlng.lng;
+            
+            marker.setLatLng([newLat, newLng]);
+            document.getElementById('lat').value = newLat;
+            document.getElementById('lng').value = newLng;
+            
+            // Update address from location
+            await updateAddressFromLocation(newLat, newLng);
+        });
+    }
+    
+    async function updateAddressFromLocation(lat, lng) {
+        try {
+            const response = await fetch('/api/get-address/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ lat: lat, lng: lng })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                if (data.address_line1 && !document.querySelector('[name="address_line1"]').value) {
+                    document.querySelector('[name="address_line1"]').value = data.address_line1;
+                }
+                if (data.city && !document.querySelector('[name="city"]').value) {
+                    document.querySelector('[name="city"]').value = data.city;
+                }
+                if (data.state && !document.querySelector('[name="state"]').value) {
+                    document.querySelector('[name="state"]').value = data.state;
+                }
+                if (data.pincode && !document.querySelector('[name="pincode"]').value) {
+                    document.querySelector('[name="pincode"]').value = data.pincode;
+                }
+            }
+        } catch (error) {
+            console.error('Error updating address:', error);
+        }
+    }
+    
+    async function getLocationFromAddress() {
+        const address = document.querySelector('[name="address_line1"]').value + ', ' +
+                       document.querySelector('[name="city"]').value + ', ' +
+                       document.querySelector('[name="state"]').value;
+        
+        if (!address.trim()) {
+            alert('Please enter address details first');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/get-location/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ address: address })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                initMap(data.lat, data.lng);
+                document.getElementById('lat').value = data.lat;
+                document.getElementById('lng').value = data.lng;
+            } else {
+                alert('Address not found. Please try a different address.');
+            }
+        } catch (error) {
+            console.error('Error getting location:', error);
+            alert('Error finding address. Please try again.');
+        }
+    }
+    
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    initMap(lat, lng);
+                    document.getElementById('lat').value = lat;
+                    document.getElementById('lng').value = lng;
+                    await updateAddressFromLocation(lat, lng);
+                },
+                function(error) {
+                    alert('Unable to get your location. Please allow location access or click on the map.');
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by your browser');
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Initialize map with current location
+    const currentLat = parseFloat(document.getElementById('lat').value) || 20.5937;
+    const currentLng = parseFloat(document.getElementById('lng').value) || 78.9629;
+    initMap(currentLat, currentLng);
+    
+    // Button handlers
+    document.getElementById('getCurrentLocationBtn').addEventListener('click', getCurrentLocation);
+    document.getElementById('updateFromAddressBtn').addEventListener('click', getLocationFromAddress);
+</script>
+{% endblock %}
